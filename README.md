@@ -96,3 +96,79 @@ You can expand this basic setup by adding:
 - API documentation (Swagger)
 - Rate limiting
 - Security middleware
+
+
+
+
+
+
+
+
+[
+    {
+        "id": "ps-61",
+        "name": "Custom Embroidered Cap",
+        "category": "accessories",
+        "subcategory": "caps",
+        "description": "Premium baseball cap with custom embroidery options. Perfect for team branding and promotional use.",
+        "pictures": [
+            "/assets/images/products/accessories/custom-cap-1.jpg",
+            "/assets/images/products/accessories/custom-cap-2.jpg"
+        ],
+        "colours": [
+            "Black",
+            "Navy",
+            "Red",
+            "White",
+            "Gray",
+            "Royal Blue"
+        ],
+        "printingMethod": "Embroidery, Heat Transfer, Patches",
+        "sizes": [
+            "One Size"
+        ],
+        "minimumQuantity": 24,
+        "featured": true,
+        "tags": [
+            "cap",
+            "embroidery",
+            "custom",
+            "promotional",
+            "branding"
+        ]
+    },
+    {
+        "id": "ps-62",
+        "name": "Sports Water Bottle",
+        "category": "accessories",
+        "subcategory": "bottles",
+        "description": "Insulated sports water bottle with custom logo printing. BPA-free and leak-proof design.",
+        "pictures": [
+            "/assets/images/products/accessories/water-bottle-1.jpg",
+            "/assets/images/products/accessories/water-bottle-2.jpg"
+        ],
+        "colours": [
+            "Black",
+            "Blue",
+            "Red",
+            "Green",
+            "White",
+            "Silver"
+        ],
+        "printingMethod": "Laser Engraving, Screen Print, Vinyl",
+        "sizes": [
+            "500ml",
+            "750ml",
+            "1000ml"
+        ],
+        "minimumQuantity": 50,
+        "featured": false,
+        "tags": [
+            "water-bottle",
+            "sports",
+            "insulated",
+            "custom-logo",
+            "bpa-free"
+        ]
+    }
+]
