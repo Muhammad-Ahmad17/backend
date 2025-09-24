@@ -1,0 +1,110 @@
+[
+    {
+        "id": "ps-1",
+        "name": "Pro Athletic Football Jersey",
+        "category": "sports-wear",
+        "subcategory": "football",
+        "description": "High-performance football jersey with moisture-wicking technology and durable construction for professional athletes.",
+        "pictures": [
+            "/assets/images/products/sports-wear/football-jersey-1.jpg",
+            "/assets/images/products/sports-wear/football-jersey-2.jpg",
+            "/assets/images/products/sports-wear/football-jersey-3.jpg"
+        ],
+        "colours": [
+            "Red",
+            "Blue",
+            "Green",
+            "Black",
+            "White",
+            "Yellow"
+        ],
+        "printingMethod": "Sublimation, Screen Print, Heat Transfer, Embroidery",
+        "sizes": [
+            "XS",
+            "S",
+            "M",
+            "L",
+            "XL",
+            "XXL"
+        ],
+        "minimumQuantity": 10,
+        "featured": true,
+        "tags": [
+            "football",
+            "jersey",
+            "sports",
+            "athletic",
+            "professional"
+        ]
+    },
+    {
+        "id": "ps-2",
+        "name": "Basketball Performance Shorts",
+        "category": "sports-wear",
+        "subcategory": "basketball",
+        "description": "Lightweight basketball shorts with mesh panels for enhanced breathability and freedom of movement.",
+        "pictures": [
+            "/assets/images/products/sports-wear/basketball-shorts-1.jpg",
+            "/assets/images/products/sports-wear/basketball-shorts-2.jpg"
+        ],
+        "colours": [
+            "Black",
+            "Navy",
+            "Red",
+            "White",
+            "Gray"
+        ],
+        "printingMethod": "Screen Print, Heat Transfer, Embroidery",
+        "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL",
+            "XXL"
+        ],
+        "minimumQuantity": 12,
+        "featured": false,
+        "tags": [
+            "basketball",
+            "shorts",
+            "sports",
+            "performance",
+            "mesh"
+        ]
+    },
+    {
+        "id": "ps-3",
+        "name": "Cricket Team Polo Shirt",
+        "category": "sports-wear",
+        "subcategory": "cricket",
+        "description": "Classic cricket polo shirt with collar and button placket. Perfect for team uniforms and casual wear.",
+        "pictures": [
+            "/assets/images/products/sports-wear/cricket-polo-1.jpg",
+            "/assets/images/products/sports-wear/cricket-polo-2.jpg"
+        ],
+        "colours": [
+            "White",
+            "Cream",
+            "Navy",
+            "Green",
+            "Blue"
+        ],
+        "printingMethod": "Embroidery, Screen Print, Heat Transfer",
+        "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL",
+            "XXL"
+        ],
+        "minimumQuantity": 8,
+        "featured": false,
+        "tags": [
+            "cricket",
+            "polo",
+            "sports",
+            "team",
+            "collar"
+        ]
+    }
+]

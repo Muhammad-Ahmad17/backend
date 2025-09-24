@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -9,6 +10,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve static files from public directory
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Database connection
 const connectDB = require('./config/database');
@@ -19,11 +23,7 @@ app.use('/api', require('./routes/api'));
 
 // Basic route
 app.get('/', (req, res) => {
-    res.json({
-        message: 'Backend API Server is running!',
-        status: 'success',
-        timestamp: new Date().toISOString()
-    });
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Error handling middleware
@@ -48,6 +48,7 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`Frontend available at: http://localhost:${PORT}`);
 });
 
 module.exports = app;

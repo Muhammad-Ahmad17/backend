@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category API Tester</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .category-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .category-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .category-btn:hover {
+            background: #2980b9;
+        }
+
+        .summary-btn {
+            background: #27ae60;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .summary-btn:hover {
+            background: #229954;
+        }
+
+        .results {
+            margin-top: 20px;
+        }
+
+        .result-header {
+            background: #ecf0f1;
+            padding: 10px 15px;
+            border-radius: 8px 8px 0 0;
+            border-left: 4px solid #3498db;
+            margin: 0;
+        }
+
+        .result-content {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 0 0 8px 8px;
+            border: 1px solid #e0e0e0;
+            border-top: none;
+            overflow-x: auto;
+        }
+
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .error {
+            color: #e74c3c;
+            background: #fdf2f2;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .product-count {
+            background: #3498db;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .endpoint-url {
+            font-family: 'Courier New', monospace;
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🛍️ Category API Endpoint Tester</h1>
+
+        <div class="category-buttons">
+            <button class="category-btn summary-btn" onclick="fetchCategoriesSummary()">
+                📊 Categories Summary
+            </button>
+
+            <button class="category-btn" onclick="fetchCategoryProducts('sports-wear')">
+                🏈 Sports Wear
+            </button>
+
+            <button class="category-btn" onclick="fetchCategoryProducts('gym-wear')">
+                💪 Gym Wear
+            </button>
+
+            <button class="category-btn" onclick="fetchCategoryProducts('fitness-wear')">
+                🏃 Fitness Wear
+            </button>
+
+            <button class="category-btn" onclick="fetchCategoryProducts('streetwear')">
+                👕 Streetwear
+            </button>
+
+            <button class="category-btn" onclick="fetchCategoryProducts('fashion-wear')">
+                👗 Fashion Wear
+            </button>
+
+            <button class="category-btn" onclick="fetchCategoryProducts('mma-arts')">
+                🥋 MMA Arts
+            </button>
+
+            <button class="category-btn" onclick="fetchCategoryProducts('accessories')">
+                🎒 Accessories
+            </button>
+        </div>
+
+        <div id="results" class="results">
+            <p style="text-align: center; color: #666;">Select a category above to test the API endpoints</p>
+        </div>
+    </div>
+
+    <script>
+        const resultsDiv = document.getElementById('results');
+
+        function showLoading(message) {
+            resultsDiv.innerHTML = `<div class="loading">🔄 ${message}</div>`;
+        }
+
+        function showError(message) {
+            resultsDiv.innerHTML = `<div class="error">❌ Error: ${message}</div>`;
+        }
+
+        function showResults(title, endpoint, data) {
+            const jsonString = JSON.stringify(data, null, 2);
+
+            resultsDiv.innerHTML = `
+                <div class="result-header">
+                    <strong>${title}</strong>
+                    ${data.count !== undefined ? `<span class="product-count">${data.count} products</span>` : ''}
+                </div>
+                <div class="result-content">
+                    <div class="endpoint-url">GET ${endpoint}</div>
+                    <pre>${jsonString}</pre>
+                </div>
+            `;
+        }
+
+        async function fetchCategoriesSummary() {
+            showLoading('Fetching categories summary...');
+
+            try {
+                const response = await fetch('/api/categories/summary');
+                const data = await response.json();
+
+                if (data.success) {
+                    showResults(
+                        '📊 Categories Summary',
+                        '/api/categories/summary',
+                        data
+                    );
+                } else {
+                    showError(data.message || 'Failed to fetch categories summary');
+                }
+            } catch (error) {
+                showError('Network error: ' + error.message);
+            }
+        }
+
+        async function fetchCategoryProducts(category) {
+            showLoading(`Fetching ${category.replace('-', ' ')} products...`);
+
+            try {
+                const response = await fetch(`/api/products/category/${category}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    showResults(
+                        `${data.categoryDisplay || category.replace('-', ' ').toUpperCase()} Products`,
+                        `/api/products/category/${category}`,
+                        data
+                    );
+                } else {
+                    showError(data.message || `Failed to fetch ${category} products`);
+                }
+            } catch (error) {
+                showError('Network error: ' + error.message);
+            }
+        }
+
+        // Auto-load categories summary on page load
+        window.addEventListener('DOMContentLoaded', function () {
+            setTimeout(fetchCategoriesSummary, 500);
+        });
+    </script>
+</body>
+
+</html>
