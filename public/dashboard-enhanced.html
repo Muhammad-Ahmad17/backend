@@ -850,6 +850,7 @@
                 width: 100px;
                 height: 100px;
             }
+        }
     </style>
 </head>
 
@@ -1062,62 +1063,62 @@
                 <button type="button" class="category-btn" data-category="mma-arts">MMA Arts</button>
                 <button type="button" class="category-btn" data-category="accessories">Accessories</button>
             </div>
-            >
+        </div>
 
-            <div id="productsContainer" class="product-grid">
-                <div class="loading"></div>
+        <div id="productsContainer" class="product-grid">
+            <div class="loading"></div>
+        </div>
+    </div>
+
+    <!-- Update Product Tab -->
+    <div id="update-product" class="tab-content">
+        <h2 style="margin-bottom: 25px;">✏️ Update Products by Category</h2>
+        <div id="update-message" class="message"></div>
+
+        <div class="category-selector">
+            <label>Select Category to Update Products:</label>
+            <div class="category-buttons" id="updateCategoryButtons">
+                <button type="button" class="category-btn" data-category="sports-wear">Sports Wear</button>
+                <button type="button" class="category-btn" data-category="gym-wear">Gym Wear</button>
+                <button type="button" class="category-btn" data-category="fitness-wear">Fitness Wear</button>
+                <button type="button" class="category-btn" data-category="streetwear">Streetwear</button>
+                <button type="button" class="category-btn" data-category="fashion-wear">Fashion Wear</button>
+                <button type="button" class="category-btn" data-category="mma-arts">MMA Arts</button>
+                <button type="button" class="category-btn" data-category="accessories">Accessories</button>
             </div>
         </div>
 
-        <!-- Update Product Tab -->
-        <div id="update-product" class="tab-content">
-            <h2 style="margin-bottom: 25px;">✏️ Update Products by Category</h2>
-            <div id="update-message" class="message"></div>
+        <div id="updateProductsContainer" class="product-grid" style="margin-top: 30px;">
+            <p style="text-align: center; color: var(--text-light); font-style: italic;">Select a category to view
+                products for
+                updating</p>
+        </div>
+    </div>
 
-            <div class="category-selector">
-                <label>Select Category to Update Products:</label>
-                <div class="category-buttons" id="updateCategoryButtons">
-                    <button type="button" class="category-btn" data-category="sports-wear">Sports Wear</button>
-                    <button type="button" class="category-btn" data-category="gym-wear">Gym Wear</button>
-                    <button type="button" class="category-btn" data-category="fitness-wear">Fitness Wear</button>
-                    <button type="button" class="category-btn" data-category="streetwear">Streetwear</button>
-                    <button type="button" class="category-btn" data-category="fashion-wear">Fashion Wear</button>
-                    <button type="button" class="category-btn" data-category="mma-arts">MMA Arts</button>
-                    <button type="button" class="category-btn" data-category="accessories">Accessories</button>
-                </div>
-            </div>
+    <!-- Delete Product Tab -->
+    <div id="delete-product" class="tab-content">
+        <h2 style="margin-bottom: 25px;">🗑️ Delete Products by Category</h2>
+        <div id="delete-message" class="message"></div>
 
-            <div id="updateProductsContainer" class="product-grid" style="margin-top: 30px;">
-                <p style="text-align: center; color: var(--text-light); font-style: italic;">Select a category to view
-                    products for
-                    updating</p>
+        <div class="category-selector">
+            <label>Select Category to Delete Products:</label>
+            <div class="category-buttons" id="deleteCategoryButtons">
+                <button type="button" class="category-btn" data-category="sports-wear">Sports Wear</button>
+                <button type="button" class="category-btn" data-category="gym-wear">Gym Wear</button>
+                <button type="button" class="category-btn" data-category="fitness-wear">Fitness Wear</button>
+                <button type="button" class="category-btn" data-category="streetwear">Streetwear</button>
+                <button type="button" class="category-btn" data-category="fashion-wear">Fashion Wear</button>
+                <button type="button" class="category-btn" data-category="mma-arts">MMA Arts</button>
+                <button type="button" class="category-btn" data-category="accessories">Accessories</button>
             </div>
         </div>
 
-        <!-- Delete Product Tab -->
-        <div id="delete-product" class="tab-content">
-            <h2 style="margin-bottom: 25px;">🗑️ Delete Products by Category</h2>
-            <div id="delete-message" class="message"></div>
-
-            <div class="category-selector">
-                <label>Select Category to Delete Products:</label>
-                <div class="category-buttons" id="deleteCategoryButtons">
-                    <button type="button" class="category-btn" data-category="sports-wear">Sports Wear</button>
-                    <button type="button" class="category-btn" data-category="gym-wear">Gym Wear</button>
-                    <button type="button" class="category-btn" data-category="fitness-wear">Fitness Wear</button>
-                    <button type="button" class="category-btn" data-category="streetwear">Streetwear</button>
-                    <button type="button" class="category-btn" data-category="fashion-wear">Fashion Wear</button>
-                    <button type="button" class="category-btn" data-category="mma-arts">MMA Arts</button>
-                    <button type="button" class="category-btn" data-category="accessories">Accessories</button>
-                </div>
-            </div>
-
-            <div id="deleteProductsContainer" class="product-grid" style="margin-top: 30px;">
-                <p style="text-align: center; color: var(--text-light); font-style: italic;">Select a category to view
-                    products for
-                    deletion</p>
-            </div>
+        <div id="deleteProductsContainer" class="product-grid" style="margin-top: 30px;">
+            <p style="text-align: center; color: var(--text-light); font-style: italic;">Select a category to view
+                products for
+                deletion</p>
         </div>
+    </div>
     </div>
 
     <!-- Update Product Modal -->
@@ -1309,8 +1310,12 @@
 
         // Setup event listeners
         function setupEventListeners() {
+            console.log('Setting up event listeners...');
+
             // Category button handlers for viewing products
-            document.querySelectorAll('#view-products .category-btn').forEach(btn => {
+            const viewButtons = document.querySelectorAll('#view-products .category-btn');
+            console.log('Found', viewButtons.length, 'view product buttons');
+            viewButtons.forEach(btn => {
                 btn.addEventListener('click', function () {
                     document.querySelectorAll('#view-products .category-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
@@ -1321,8 +1326,11 @@
             });
 
             // Update category buttons
-            document.querySelectorAll('#updateCategoryButtons .category-btn').forEach(btn => {
+            const updateButtons = document.querySelectorAll('#updateCategoryButtons .category-btn');
+            console.log('Found', updateButtons.length, 'update buttons');
+            updateButtons.forEach(btn => {
                 btn.addEventListener('click', function () {
+                    console.log('Update button clicked for category:', this.dataset.category);
                     document.querySelectorAll('#updateCategoryButtons .category-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
 
@@ -1332,8 +1340,11 @@
             });
 
             // Delete category buttons
-            document.querySelectorAll('#deleteCategoryButtons .category-btn').forEach(btn => {
+            const deleteButtons = document.querySelectorAll('#deleteCategoryButtons .category-btn');
+            console.log('Found', deleteButtons.length, 'delete buttons');
+            deleteButtons.forEach(btn => {
                 btn.addEventListener('click', function () {
+                    console.log('Delete button clicked for category:', this.dataset.category);
                     document.querySelectorAll('#deleteCategoryButtons .category-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
 
@@ -1656,13 +1667,21 @@
 
         // Load products for category-wise update
         async function loadProductsForUpdate(category) {
+            console.log('loadProductsForUpdate called with category:', category);
             currentUpdateCategory = category;
             const container = document.getElementById('updateProductsContainer');
+            if (!container) {
+                console.error('updateProductsContainer not found!');
+                return;
+            }
             container.innerHTML = '<div class="loading"></div>';
 
             try {
-                const response = await fetch(`/api/products/category/${category}/manage`);
+                const url = `/api/products/category/${category}/manage`;
+                console.log('Fetching:', url);
+                const response = await fetch(url);
                 const data = await response.json();
+                console.log('API response:', data);
 
                 if (data.success && data.products.length > 0) {
                     container.innerHTML = data.products.map(product => `
@@ -1680,8 +1699,11 @@
                             </div>
                         </div>
                     `).join('');
+                    console.log('Products rendered successfully');
                 } else {
-                    container.innerHTML = `<div style="text-align: center; color: var(--text-light); grid-column: 1/-1;"><h3>No products found in ${data.categoryDisplay}</h3></div>`;
+                    const message = `<div style="text-align: center; color: var(--text-light); grid-column: 1/-1;"><h3>No products found in ${data.categoryDisplay}</h3></div>`;
+                    container.innerHTML = message;
+                    console.log('No products found, showing message');
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -1691,8 +1713,13 @@
 
         // Load products for category-wise delete
         async function loadProductsForDelete(category) {
+            console.log('loadProductsForDelete called with category:', category);
             currentDeleteCategory = category;
             const container = document.getElementById('deleteProductsContainer');
+            if (!container) {
+                console.error('deleteProductsContainer not found!');
+                return;
+            }
             container.innerHTML = '<div class="loading"></div>';
 
             try {
