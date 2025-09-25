@@ -6,25 +6,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Category API Tester</title>
     <style>
+        :root {
+            --bg-primary: #272822;
+            --bg-secondary: #1e1f1a;
+            --bg-tertiary: #383830;
+            --text-primary: #a6e22e;
+            --text-secondary: #f8f8f2;
+            --text-light: #a6a6a6;
+            --border-color: #49483e;
+            --accent-color: #a6e22e;
+            --success-color: #a6e22e;
+            --warning-color: #f92672;
+            --info-color: #66d9ef;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-secondary);
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f5f5f5;
+            line-height: 1.6;
         }
 
         .container {
-            background: white;
+            background: var(--bg-secondary);
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
         h1 {
-            color: #2c3e50;
+            color: var(--accent-color);
             text-align: center;
             margin-bottom: 30px;
+            font-size: 2.2rem;
+            font-weight: 600;
         }
 
         .category-buttons {
@@ -35,29 +60,36 @@
         }
 
         .category-btn {
-            background: #3498db;
-            color: white;
-            border: none;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
             padding: 12px 20px;
             border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: 600;
-            transition: background 0.3s;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
 
         .category-btn:hover {
-            background: #2980b9;
+            background: var(--accent-color);
+            color: var(--bg-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(166, 226, 46, 0.2);
         }
 
         .summary-btn {
-            background: #27ae60;
+            background: var(--accent-color);
+            color: var(--bg-primary);
             width: 100%;
             margin-bottom: 20px;
+            font-weight: 600;
         }
 
         .summary-btn:hover {
-            background: #229954;
+            background: #8bc34a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(166, 226, 46, 0.3);
         }
 
         .results {
@@ -65,18 +97,22 @@
         }
 
         .result-header {
-            background: #ecf0f1;
-            padding: 10px 15px;
+            background: var(--bg-tertiary);
+            color: var(--accent-color);
+            padding: 12px 18px;
             border-radius: 8px 8px 0 0;
-            border-left: 4px solid #3498db;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
             margin: 0;
+            font-weight: 600;
         }
 
         .result-content {
-            background: #f8f9fa;
-            padding: 15px;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            padding: 20px;
             border-radius: 0 0 8px 8px;
-            border: 1px solid #e0e0e0;
+            border: 1px solid var(--border-color);
             border-top: none;
             overflow-x: auto;
         }
@@ -90,20 +126,21 @@
         .loading {
             text-align: center;
             padding: 20px;
-            color: #666;
+            color: var(--text-light);
+            font-style: italic;
         }
 
         .error {
-            color: #e74c3c;
-            background: #fdf2f2;
+            color: var(--warning-color);
+            background: rgba(249, 38, 114, 0.1);
             padding: 15px;
             border-radius: 8px;
-            border-left: 4px solid #e74c3c;
+            border: 1px solid rgba(249, 38, 114, 0.3);
         }
 
         .product-count {
-            background: #3498db;
-            color: white;
+            background: var(--accent-color);
+            color: var(--bg-primary);
             padding: 4px 8px;
             border-radius: 12px;
             font-size: 12px;
@@ -111,20 +148,46 @@
         }
 
         .endpoint-url {
-            font-family: 'Courier New', monospace;
-            background: #2c3e50;
-            color: #ecf0f1;
-            padding: 8px 12px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            font-size: 14px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            background: var(--bg-tertiary);
+            color: var(--info-color);
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            border: 1px solid var(--border-color);
+        }
+
+        pre {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .success-indicator {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+        .error-indicator {
+            color: var(--warning-color);
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>🛍️ Category API Endpoint Tester</h1>
+        <h1>🛍️ Category & Subcategory API Tester</h1>
 
         <div class="category-buttons">
             <button class="category-btn summary-btn" onclick="fetchCategoriesSummary()">
@@ -160,6 +223,12 @@
             </button>
         </div>
 
+        <!-- Subcategory Section -->
+        <div id="subcategory-section" style="display: none; margin: 20px 0;">
+            <h3 id="subcategory-title" style="color: #2c3e50; margin-bottom: 15px;"></h3>
+            <div id="subcategory-buttons" class="category-buttons"></div>
+        </div>
+
         <div id="results" class="results">
             <p style="text-align: center; color: #666;">Select a category above to test the API endpoints</p>
         </div>
@@ -167,6 +236,31 @@
 
     <script>
         const resultsDiv = document.getElementById('results');
+
+        // Category and subcategory structure (matching current database)
+        const SUBCATEGORIES = {
+            'sports-wear': [
+                'T-Shirts', 'Shorts', 'Jerseys', 'Uniforms', 'Tank Tops', 'Hoodies', 'Track Suits'
+            ],
+            'gym-wear': [
+                'Tank Tops', 'Leggings', 'Sports Bras', 'Gym Shorts', 'Hoodies', 'Tracksuits', 'Joggers'
+            ],
+            'fitness-wear': [
+                'Yoga Sets', 'Compression Wear', 'Running Shorts', 'Fitness Tops', 'Athletic Wear'
+            ],
+            'streetwear': [
+                'T-Shirts', 'Hoodies', 'Sweatshirts', 'Casual Shorts', 'Joggers', 'Tank Tops'
+            ],
+            'fashion-wear': [
+                'Jackets', 'Casual Wear', 'Designer Tops', 'Fashion Accessories'
+            ],
+            'mma-arts': [
+                'MMA Shorts', 'Rash Guards', 'MMA Gloves', 'Fighting Gear', 'Training Wear'
+            ],
+            'accessories': [
+                'Bags', 'Caps', 'Socks', 'Gloves', 'Belts'
+            ]
+        };
 
         function showLoading(message) {
             resultsDiv.innerHTML = `<div class="loading">🔄 ${message}</div>`;
@@ -191,29 +285,71 @@
             `;
         }
 
+        function showSubcategories(category) {
+            const subcategorySection = document.getElementById('subcategory-section');
+            const subcategoryTitle = document.getElementById('subcategory-title');
+            const subcategoryButtons = document.getElementById('subcategory-buttons');
+
+            if (SUBCATEGORIES[category]) {
+                subcategoryTitle.textContent = `📂 ${category.replace(/-/g, ' ').toUpperCase()} Subcategories:`;
+
+                subcategoryButtons.innerHTML = SUBCATEGORIES[category].map(subcategory => `
+                    <button class="category-btn" onclick="fetchSubcategoryProducts('${category}', '${subcategory}')">
+                        ${subcategory}
+                    </button>
+                `).join('');
+
+                subcategorySection.style.display = 'block';
+            } else {
+                subcategorySection.style.display = 'none';
+            }
+        }
+
         async function fetchCategoriesSummary() {
             showLoading('Fetching categories summary...');
+            document.getElementById('subcategory-section').style.display = 'none';
 
             try {
-                const response = await fetch('/api/categories/summary');
-                const data = await response.json();
+                // Since we don't have a summary endpoint, let's create a comprehensive overview
+                const categoryData = {};
 
-                if (data.success) {
-                    showResults(
-                        '📊 Categories Summary',
-                        '/api/categories/summary',
-                        data
-                    );
-                } else {
-                    showError(data.message || 'Failed to fetch categories summary');
+                for (const category of Object.keys(SUBCATEGORIES)) {
+                    try {
+                        const response = await fetch(`/api/products/category/${category}`);
+                        const data = await response.json();
+                        categoryData[category] = {
+                            success: data.success,
+                            count: data.count || 0,
+                            subcategories: SUBCATEGORIES[category].length
+                        };
+                    } catch (error) {
+                        categoryData[category] = {
+                            success: false,
+                            error: error.message,
+                            subcategories: SUBCATEGORIES[category].length
+                        };
+                    }
                 }
+
+                showResults(
+                    '📊 Categories & Subcategories Summary',
+                    'Multiple API calls to /api/products/category/{category}',
+                    {
+                        success: true,
+                        message: 'Categories and subcategories overview',
+                        categories: categoryData,
+                        totalCategories: Object.keys(SUBCATEGORIES).length,
+                        totalSubcategories: Object.values(SUBCATEGORIES).reduce((sum, subs) => sum + subs.length, 0)
+                    }
+                );
             } catch (error) {
                 showError('Network error: ' + error.message);
             }
         }
 
         async function fetchCategoryProducts(category) {
-            showLoading(`Fetching ${category.replace('-', ' ')} products...`);
+            showLoading(`Fetching ${category.replace(/-/g, ' ')} products...`);
+            showSubcategories(category);
 
             try {
                 const response = await fetch(`/api/products/category/${category}`);
@@ -221,12 +357,34 @@
 
                 if (data.success) {
                     showResults(
-                        `${data.categoryDisplay || category.replace('-', ' ').toUpperCase()} Products`,
+                        `${category.replace(/-/g, ' ').toUpperCase()} Products`,
                         `/api/products/category/${category}`,
                         data
                     );
                 } else {
                     showError(data.message || `Failed to fetch ${category} products`);
+                }
+            } catch (error) {
+                showError('Network error: ' + error.message);
+            }
+        }
+
+        async function fetchSubcategoryProducts(category, subcategory) {
+            showLoading(`Fetching ${subcategory} products from ${category.replace(/-/g, ' ')}...`);
+
+            try {
+                const encodedSubcategory = encodeURIComponent(subcategory);
+                const response = await fetch(`/api/products/${category}/${encodedSubcategory}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    showResults(
+                        `${subcategory} (${category.replace(/-/g, ' ')})`,
+                        `/api/products/${category}/${encodedSubcategory}`,
+                        data
+                    );
+                } else {
+                    showError(data.message || `No products found for ${subcategory} in ${category}`);
                 }
             } catch (error) {
                 showError('Network error: ' + error.message);

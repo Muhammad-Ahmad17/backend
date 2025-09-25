@@ -712,6 +712,57 @@ router.get('/categories/summary', async (req, res) => {
     }
 });
 
+// GET categories and subcategories structure
+router.get('/categories-structure', (req, res) => {
+    const { SUBCATEGORIES } = require('../middleware/validation');
+
+    res.json({
+        success: true,
+        categories: SUBCATEGORIES,
+        totalCategories: Object.keys(SUBCATEGORIES).length,
+        totalSubcategories: Object.values(SUBCATEGORIES).reduce((sum, subs) => sum + subs.length, 0)
+    });
+});
+
+// GET products by category and subcategory
+router.get('/products/:category/:subcategory', async (req, res) => {
+    try {
+        const { category, subcategory } = req.params;
+        const { VALID_CATEGORIES, SUBCATEGORIES } = require('../middleware/validation');
+
+        // Decode URI components
+        const decodedCategory = decodeURIComponent(category).toLowerCase();
+        const decodedSubcategory = decodeURIComponent(subcategory);
+
+        if (!VALID_CATEGORIES.includes(decodedCategory)) {
+            return res.status(400).json({ success: false, message: 'Invalid category.' });
+        }
+
+        if (!SUBCATEGORIES[decodedCategory] || !SUBCATEGORIES[decodedCategory].includes(decodedSubcategory)) {
+            return res.status(400).json({ success: false, message: 'Invalid subcategory for the given category.' });
+        }
+
+        const products = await Product.find({
+            category: decodedCategory,
+            subcategory: decodedSubcategory
+        });
+
+        if (!products || products.length === 0) {
+            return res.status(404).json({ success: false, message: 'No products found for this category and subcategory.' });
+        }
+
+        res.json({
+            success: true,
+            count: products.length,
+            products: products
+        });
+
+    } catch (error) {
+        console.error('Error fetching products by subcategory:', error);
+        res.status(500).json({ success: false, message: 'Server error while fetching products.' });
+    }
+});
+
 // Category-wise product management endpoints
 // GET products by category for update/delete operations
 router.get('/products/category/:categoryName/manage', async (req, res) => {

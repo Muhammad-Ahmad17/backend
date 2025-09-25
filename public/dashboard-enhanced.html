@@ -896,7 +896,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="category">Category *</label>
-                            <select id="category" name="category" required>
+                            <select id="category" name="category" required onchange="updateSubcategories()">
                                 <option value="">Select Category</option>
                                 <option value="sports-wear">Sports Wear</option>
                                 <option value="gym-wear">Gym Wear</option>
@@ -909,8 +909,9 @@
                         </div>
                         <div class="form-group">
                             <label for="subcategory">Subcategory *</label>
-                            <input type="text" id="subcategory" name="subcategory" required
-                                placeholder="e.g., tank-top, hoodie, shorts">
+                            <select id="subcategory" name="subcategory" required disabled>
+                                <option value="">Select Category First</option>
+                            </select>
                         </div>
                     </div>
 
@@ -996,8 +997,23 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="printingMethod">Printing Method *</label>
-                            <input type="text" id="printingMethod" name="printingMethod" required
-                                placeholder="e.g., Sublimation, Screen Print, Heat Transfer">
+                            <select id="printingMethod" name="printingMethod" required
+                                onchange="showPrintingMethodInfo()">
+                                <option value="">Select Printing Method</option>
+                                <option value="Sublimation">Sublimation</option>
+                                <option value="Screen Print">Screen Print</option>
+                                <option value="Heat Transfer">Heat Transfer</option>
+                                <option value="Digital Print">Digital Print</option>
+                                <option value="Embroidery">Embroidery</option>
+                                <option value="Vinyl Cut">Vinyl Cut</option>
+                                <option value="DTG (Direct to Garment)">DTG (Direct to Garment)</option>
+                                <option value="Foil Print">Foil Print</option>
+                                <option value="Reflective Print">Reflective Print</option>
+                                <option value="3D Puff Print">3D Puff Print</option>
+                            </select>
+                            <div id="printingMethodInfo"
+                                style="margin-top: 10px; padding: 10px; background: rgba(166, 226, 46, 0.1); border-radius: 6px; color: var(--text); font-size: 13px; display: none;">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="minimumQuantity">Minimum Quantity *</label>
@@ -1046,62 +1062,62 @@
                 <button type="button" class="category-btn" data-category="mma-arts">MMA Arts</button>
                 <button type="button" class="category-btn" data-category="accessories">Accessories</button>
             </div>
-        </div>
+            >
 
-        <div id="productsContainer" class="product-grid">
-            <div class="loading"></div>
-        </div>
-    </div>
-
-    <!-- Update Product Tab -->
-    <div id="update-product" class="tab-content">
-        <h2 style="margin-bottom: 25px;">✏️ Update Products by Category</h2>
-        <div id="update-message" class="message"></div>
-
-        <div class="category-selector">
-            <label>Select Category to Update Products:</label>
-            <div class="category-buttons" id="updateCategoryButtons">
-                <button type="button" class="category-btn" data-category="sports-wear">Sports Wear</button>
-                <button type="button" class="category-btn" data-category="gym-wear">Gym Wear</button>
-                <button type="button" class="category-btn" data-category="fitness-wear">Fitness Wear</button>
-                <button type="button" class="category-btn" data-category="streetwear">Streetwear</button>
-                <button type="button" class="category-btn" data-category="fashion-wear">Fashion Wear</button>
-                <button type="button" class="category-btn" data-category="mma-arts">MMA Arts</button>
-                <button type="button" class="category-btn" data-category="accessories">Accessories</button>
+            <div id="productsContainer" class="product-grid">
+                <div class="loading"></div>
             </div>
         </div>
 
-        <div id="updateProductsContainer" class="product-grid" style="margin-top: 30px;">
-            <p style="text-align: center; color: var(--text-light); font-style: italic;">Select a category to view
-                products for
-                updating</p>
-        </div>
-    </div>
+        <!-- Update Product Tab -->
+        <div id="update-product" class="tab-content">
+            <h2 style="margin-bottom: 25px;">✏️ Update Products by Category</h2>
+            <div id="update-message" class="message"></div>
 
-    <!-- Delete Product Tab -->
-    <div id="delete-product" class="tab-content">
-        <h2 style="margin-bottom: 25px;">🗑️ Delete Products by Category</h2>
-        <div id="delete-message" class="message"></div>
+            <div class="category-selector">
+                <label>Select Category to Update Products:</label>
+                <div class="category-buttons" id="updateCategoryButtons">
+                    <button type="button" class="category-btn" data-category="sports-wear">Sports Wear</button>
+                    <button type="button" class="category-btn" data-category="gym-wear">Gym Wear</button>
+                    <button type="button" class="category-btn" data-category="fitness-wear">Fitness Wear</button>
+                    <button type="button" class="category-btn" data-category="streetwear">Streetwear</button>
+                    <button type="button" class="category-btn" data-category="fashion-wear">Fashion Wear</button>
+                    <button type="button" class="category-btn" data-category="mma-arts">MMA Arts</button>
+                    <button type="button" class="category-btn" data-category="accessories">Accessories</button>
+                </div>
+            </div>
 
-        <div class="category-selector">
-            <label>Select Category to Delete Products:</label>
-            <div class="category-buttons" id="deleteCategoryButtons">
-                <button type="button" class="category-btn" data-category="sports-wear">Sports Wear</button>
-                <button type="button" class="category-btn" data-category="gym-wear">Gym Wear</button>
-                <button type="button" class="category-btn" data-category="fitness-wear">Fitness Wear</button>
-                <button type="button" class="category-btn" data-category="streetwear">Streetwear</button>
-                <button type="button" class="category-btn" data-category="fashion-wear">Fashion Wear</button>
-                <button type="button" class="category-btn" data-category="mma-arts">MMA Arts</button>
-                <button type="button" class="category-btn" data-category="accessories">Accessories</button>
+            <div id="updateProductsContainer" class="product-grid" style="margin-top: 30px;">
+                <p style="text-align: center; color: var(--text-light); font-style: italic;">Select a category to view
+                    products for
+                    updating</p>
             </div>
         </div>
 
-        <div id="deleteProductsContainer" class="product-grid" style="margin-top: 30px;">
-            <p style="text-align: center; color: var(--text-light); font-style: italic;">Select a category to view
-                products for
-                deletion</p>
+        <!-- Delete Product Tab -->
+        <div id="delete-product" class="tab-content">
+            <h2 style="margin-bottom: 25px;">🗑️ Delete Products by Category</h2>
+            <div id="delete-message" class="message"></div>
+
+            <div class="category-selector">
+                <label>Select Category to Delete Products:</label>
+                <div class="category-buttons" id="deleteCategoryButtons">
+                    <button type="button" class="category-btn" data-category="sports-wear">Sports Wear</button>
+                    <button type="button" class="category-btn" data-category="gym-wear">Gym Wear</button>
+                    <button type="button" class="category-btn" data-category="fitness-wear">Fitness Wear</button>
+                    <button type="button" class="category-btn" data-category="streetwear">Streetwear</button>
+                    <button type="button" class="category-btn" data-category="fashion-wear">Fashion Wear</button>
+                    <button type="button" class="category-btn" data-category="mma-arts">MMA Arts</button>
+                    <button type="button" class="category-btn" data-category="accessories">Accessories</button>
+                </div>
+            </div>
+
+            <div id="deleteProductsContainer" class="product-grid" style="margin-top: 30px;">
+                <p style="text-align: center; color: var(--text-light); font-style: italic;">Select a category to view
+                    products for
+                    deletion</p>
+            </div>
         </div>
-    </div>
     </div>
 
     <!-- Update Product Modal -->
@@ -1122,18 +1138,6 @@
                     <label for="updateSubcategory">Subcategory *</label>
                     <select id="updateSubcategory" name="subcategory" required>
                         <option value="">Select Subcategory</option>
-                        <option value="T-Shirts">T-Shirts</option>
-                        <option value="Shorts">Shorts</option>
-                        <option value="Hoodies">Hoodies</option>
-                        <option value="Joggers">Joggers</option>
-                        <option value="Tank Tops">Tank Tops</option>
-                        <option value="Jackets">Jackets</option>
-                        <option value="Leggings">Leggings</option>
-                        <option value="Sports Bras">Sports Bras</option>
-                        <option value="Shoes">Shoes</option>
-                        <option value="Gloves">Gloves</option>
-                        <option value="Caps">Caps</option>
-                        <option value="Bags">Bags</option>
                     </select>
                 </div>
 
@@ -1214,6 +1218,86 @@
         let selectedFiles = [];
         let currentUpdateCategory = null;
         let currentDeleteCategory = null;
+
+        // Category and subcategory structure
+        const SUBCATEGORIES = {
+            'sports-wear': [
+                'T-Shirts', 'Shorts', 'Jerseys', 'Uniforms', 'Tank Tops', 'Hoodies', 'Track Suits'
+            ],
+            'gym-wear': [
+                'Tank Tops', 'Leggings', 'Sports Bras', 'Gym Shorts', 'Hoodies', 'Tracksuits', 'Joggers'
+            ],
+            'fitness-wear': [
+                'Yoga Sets', 'Compression Wear', 'Running Shorts', 'Fitness Tops', 'Athletic Wear'
+            ],
+            'streetwear': [
+                'T-Shirts', 'Hoodies', 'Sweatshirts', 'Casual Shorts', 'Joggers', 'Tank Tops'
+            ],
+            'fashion-wear': [
+                'Jackets', 'Casual Wear', 'Designer Tops', 'Fashion Accessories'
+            ],
+            'mma-arts': [
+                'MMA Shorts', 'Rash Guards', 'MMA Gloves', 'Fighting Gear', 'Training Wear'
+            ],
+            'accessories': [
+                'Bags', 'Caps', 'Socks', 'Gloves', 'Belts'
+            ]
+        };
+
+        // Printing method information
+        const PRINTING_METHOD_INFO = {
+            'Sublimation': 'Best for polyester fabrics. Vibrant colors, durable, great for all-over prints.',
+            'Screen Print': 'Most popular method. Cost-effective for bulk orders, vibrant colors, works on most fabrics.',
+            'Heat Transfer': 'Good for small quantities. Quick turnaround, works on various materials.',
+            'Digital Print': 'High quality photo prints. Great for complex designs with many colors.',
+            'Embroidery': 'Premium finish. Durable and professional looking, ideal for logos and text.',
+            'Vinyl Cut': 'Solid colors only. Durable, great for numbers, names, and simple designs.',
+            'DTG (Direct to Garment)': 'Excellent for detailed designs. Soft feel, good for cotton garments.',
+            'Foil Print': 'Metallic finish. Eye-catching, premium appearance, best for special designs.',
+            'Reflective Print': 'Safety feature. Visible in low light, perfect for safety and sports wear.',
+            '3D Puff Print': 'Raised texture. Creates dimensional effect, great for logos and text.'
+        };
+
+        // Dynamic subcategory dropdown function
+        function updateSubcategories() {
+            const categorySelect = document.getElementById('category');
+            const subcategorySelect = document.getElementById('subcategory');
+            const selectedCategory = categorySelect.value;
+
+            // Clear subcategory options
+            subcategorySelect.innerHTML = '<option value="">Select Subcategory</option>';
+
+            if (selectedCategory && SUBCATEGORIES[selectedCategory]) {
+                // Enable subcategory dropdown
+                subcategorySelect.disabled = false;
+
+                // Add subcategory options
+                SUBCATEGORIES[selectedCategory].forEach(subcategory => {
+                    const option = document.createElement('option');
+                    option.value = subcategory;
+                    option.textContent = subcategory;
+                    subcategorySelect.appendChild(option);
+                });
+            } else {
+                // Disable if no category selected
+                subcategorySelect.disabled = true;
+                subcategorySelect.innerHTML = '<option value="">Select Category First</option>';
+            }
+        }
+
+        // Show printing method information
+        function showPrintingMethodInfo() {
+            const printingMethodSelect = document.getElementById('printingMethod');
+            const infoDiv = document.getElementById('printingMethodInfo');
+            const selectedMethod = printingMethodSelect.value;
+
+            if (selectedMethod && PRINTING_METHOD_INFO[selectedMethod]) {
+                infoDiv.innerHTML = `<strong>ℹ️ ${selectedMethod}:</strong> ${PRINTING_METHOD_INFO[selectedMethod]}`;
+                infoDiv.style.display = 'block';
+            } else {
+                infoDiv.style.display = 'none';
+            }
+        }
 
         // Initialize dashboard
         document.addEventListener('DOMContentLoaded', function () {
@@ -1655,7 +1739,23 @@
             document.getElementById('updateProductId').value = product.id;
             document.getElementById('updateProductCategory').value = category;
             document.getElementById('updateName').value = product.name;
-            document.getElementById('updateSubcategory').value = product.subcategory;
+
+            // Populate subcategory dropdown based on category
+            const updateSubcategorySelect = document.getElementById('updateSubcategory');
+            updateSubcategorySelect.innerHTML = '<option value="">Select Subcategory</option>';
+
+            if (SUBCATEGORIES[category]) {
+                SUBCATEGORIES[category].forEach(subcategory => {
+                    const option = document.createElement('option');
+                    option.value = subcategory;
+                    option.textContent = subcategory;
+                    if (subcategory === product.subcategory) {
+                        option.selected = true;
+                    }
+                    updateSubcategorySelect.appendChild(option);
+                });
+            }
+
             document.getElementById('updateMinimumQuantity').value = product.minimumQuantity;
             document.getElementById('updateFeatured').value = product.featured ? 'true' : 'false';
             document.getElementById('updateDescription').value = product.description;

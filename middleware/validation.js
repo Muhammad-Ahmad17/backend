@@ -12,6 +12,30 @@ const VALID_CATEGORIES = [
     'streetwear', 'fashion-wear', 'mma-arts', 'accessories'
 ];
 
+const SUBCATEGORIES = {
+    'sports-wear': [
+        'T-Shirts', 'Shorts', 'Jerseys', 'Uniforms', 'Tank Tops', 'Hoodies', 'Track Suits'
+    ],
+    'gym-wear': [
+        'Tank Tops', 'Leggings', 'Sports Bras', 'Gym Shorts', 'Hoodies', 'Tracksuits', 'Joggers'
+    ],
+    'fitness-wear': [
+        'Yoga Sets', 'Compression Wear', 'Running Shorts', 'Fitness Tops', 'Athletic Wear'
+    ],
+    'streetwear': [
+        'T-Shirts', 'Hoodies', 'Sweatshirts', 'Casual Shorts', 'Joggers', 'Tank Tops'
+    ],
+    'fashion-wear': [
+        'Jackets', 'Casual Wear', 'Designer Tops', 'Fashion Accessories'
+    ],
+    'mma-arts': [
+        'MMA Shorts', 'Rash Guards', 'MMA Gloves', 'Fighting Gear', 'Training Wear'
+    ],
+    'accessories': [
+        'Bags', 'Caps', 'Socks', 'Gloves', 'Belts'
+    ]
+};
+
 // Available product sizes for validation
 const VALID_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
 
@@ -43,8 +67,13 @@ const validateProduct = [
     // Subcategory validation - secondary classification
     body('subcategory')
         .trim()
-        .isLength({ min: 2, max: 50 })
-        .withMessage('Subcategory must be between 2 and 50 characters'),
+        .custom((value, { req }) => {
+            const category = req.body.category;
+            if (!SUBCATEGORIES[category] || !SUBCATEGORIES[category].includes(value)) {
+                throw new Error(`Invalid subcategory for the selected category.`);
+            }
+            return true;
+        }),
 
     // Description validation - product details
     body('description')
@@ -183,5 +212,6 @@ module.exports = {
     handleUploadError,
     validateCategoryUpdate,
     VALID_CATEGORIES,
+    SUBCATEGORIES,
     VALID_SIZES
 };
