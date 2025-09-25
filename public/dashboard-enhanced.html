@@ -954,7 +954,6 @@
                             <button type="button" class="add-color-btn" onclick="addColor()">Add Color</button>
                         </div>
                         <div id="colorList" class="color-list"></div>
-                        <input type="hidden" id="coloursData" name="colours">
                     </div>
 
                     <!-- Multiple Size Selection -->
@@ -1537,7 +1536,7 @@
         }
 
         function updateColorData() {
-            document.getElementById('coloursData').value = JSON.stringify(selectedColors);
+            // Don't store in hidden field - we'll handle this in form submission
         }
 
         // Form handling
@@ -1563,7 +1562,8 @@
 
             const formData = new FormData(this);
 
-            // Add colors to form data (they're already in selectedColors)
+            // Clear any existing colours field and add colors properly
+            formData.delete('colours');
             selectedColors.forEach(color => {
                 formData.append('colours', color);
             });
