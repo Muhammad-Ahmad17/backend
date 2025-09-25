@@ -152,7 +152,7 @@ const checkValidationResult = (req, res, next) => {
 };
 
 /**
- * Middleware for handling file upload errors
+ * Middleware for handling file upload errors 
  * Provides clear error messages for image upload issues
  */
 const handleUploadError = (error, req, res, next) => {
