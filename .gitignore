@@ -43,3 +43,5 @@ Thumbs.db
 # Build outputs
 dist/
 build/
+
+API_STRUCTURE.node_modules

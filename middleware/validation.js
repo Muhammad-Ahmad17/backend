@@ -8,31 +8,41 @@ const { body, validationResult } = require('express-validator');
 
 // Available product categories for validation
 const VALID_CATEGORIES = [
-    'sports-wear', 'gym-wear', 'fitness-wear',
+    'sports-wear', 'gym-wear', 'safety-wear',
     'streetwear', 'fashion-wear', 'mma-arts', 'accessories'
 ];
 
 const SUBCATEGORIES = {
     'sports-wear': [
-        'T-Shirts', 'Shorts', 'Jerseys', 'Uniforms', 'Tank Tops', 'Hoodies', 'Track Suits'
+        'American Football Uniform', 'Baseball Uniform', 'Basketball Uniform', 'Cheer Leading Uniform',
+        'Ice Hockey Uniform', 'Lacrosse Uniform', 'Rugby Uniforms', 'Volleyball Uniform',
+        'Netball Uniform', 'Cycling Uniform', 'T-Shirts', 'Tank Tops'
     ],
     'gym-wear': [
-        'Tank Tops', 'Leggings', 'Sports Bras', 'Gym Shorts', 'Hoodies', 'Tracksuits', 'Joggers'
+        'Leggings', 'Track Suits', 'Hoodies', 'Jogger Pants', 'Running Shorts',
+        'Fitness Bra', 'Yoga Sets', 'Rash Guard', 'Body Suits', 'Women Crop Tops',
+        'Tank Tops', 'Headwear and Accessories', 'Bags', 'tank-top'
     ],
-    'fitness-wear': [
-        'Yoga Sets', 'Compression Wear', 'Running Shorts', 'Fitness Tops', 'Athletic Wear'
+    'safety-wear': [
+        'Safety Jackets', 'Safety Trousers', 'Safety Shirts', 'High-Visibility Clothing',
+        'Anti-Static Clothing', 'Flame-Retardant Clothing'
     ],
     'streetwear': [
-        'T-Shirts', 'Hoodies', 'Sweatshirts', 'Casual Shorts', 'Joggers', 'Tank Tops'
+        'Onesies', 'Casual Shorts', 'Beach Shorts', 'Zipper Hoodies', 'Tie-Dye Hoodies',
+        'Sweatshirts', 'Flannel Shirts', 'Sweatpants & Bottoms', 'T-Shirts', 'Polo Shirts',
+        'Singlets & Tops'
     ],
     'fashion-wear': [
-        'Jackets', 'Casual Wear', 'Designer Tops', 'Fashion Accessories'
+        'Pull Over Jackets', 'Varsity Jackets', 'Puffers Jackets', 'Bomber Jackets',
+        'Soft Shell Jackets', 'Rain Jackets', 'Leather Jackets', 'Denim Jackets',
+        'Coach Jackets', 'Windbreaker Jackets'
     ],
     'mma-arts': [
-        'MMA Shorts', 'Rash Guards', 'MMA Gloves', 'Fighting Gear', 'Training Wear'
+        'Wrestling Gear', 'Judo Uniforms', 'Karate Uniforms', 'Kickboxing Gear',
+        'Brazilian Jiu-Jitsu (BJJ) Uniforms', 'T-Shirts'
     ],
     'accessories': [
-        'Bags', 'Caps', 'Socks', 'Gloves', 'Belts'
+        'Bags', 'Caps', 'Socks'
     ]
 };
 
@@ -81,15 +91,18 @@ const validateProduct = [
         .isLength({ min: 10, max: 1000 })
         .withMessage('Description must be between 10 and 1000 characters'),
 
-    // Colors validation - user-defined colors array
+    // Colors validation - user-defined colors array or single color
     body('colours')
-        .isArray({ min: 1 })
+        .custom((value) => {
+            if (Array.isArray(value)) {
+                return value.length >= 1 && value.every(color => typeof color === 'string' && color.trim().length > 0);
+            }
+            if (typeof value === 'string' && value.trim().length > 0) {
+                return true; // Single color is valid
+            }
+            throw new Error('At least one colour must be provided');
+        })
         .withMessage('At least one colour must be provided'),
-
-    body('colours.*')
-        .trim()
-        .isLength({ min: 1 })
-        .withMessage('Each colour must not be empty'),
 
     // Printing method validation - manufacturing specification
     body('printingMethod')
@@ -97,19 +110,29 @@ const validateProduct = [
         .isLength({ min: 2, max: 200 })
         .withMessage('Printing method must be between 2 and 200 characters'),
 
-    // Sizes validation - multiple selection allowed
+    // Sizes validation - multiple selection allowed, handle both arrays and single values
     body('sizes')
-        .isArray({ min: 1 })
+        .custom((value) => {
+            const VALID_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+            if (Array.isArray(value)) {
+                return value.length >= 1 && value.every(size => VALID_SIZES.includes(size));
+            }
+            if (typeof value === 'string' && VALID_SIZES.includes(value)) {
+                return true; // Single size is valid
+            }
+            throw new Error(`At least one size must be provided. Valid sizes: ${VALID_SIZES.join(', ')}`);
+        })
         .withMessage('At least one size must be provided'),
 
-    body('sizes.*')
-        .trim()
-        .isIn(VALID_SIZES)
-        .withMessage(`Each size must be one of: ${VALID_SIZES.join(', ')}`),
-
-    // Minimum quantity validation - business rule
+    // Minimum quantity validation - business rule (handle string input from forms)
     body('minimumQuantity')
-        .isInt({ min: 1, max: 1000 })
+        .custom((value) => {
+            const num = parseInt(value);
+            if (isNaN(num) || num < 1 || num > 1000) {
+                throw new Error('Minimum quantity must be between 1 and 1000');
+            }
+            return true;
+        })
         .withMessage('Minimum quantity must be between 1 and 1000'),
 
     // Featured status validation - optional boolean
@@ -118,17 +141,20 @@ const validateProduct = [
         .isBoolean()
         .withMessage('Featured must be a boolean value'),
 
-    // Tags validation - optional array for SEO and filtering
+    // Tags validation - optional array or comma-separated string for SEO and filtering
     body('tags')
         .optional()
-        .isArray()
-        .withMessage('Tags must be an array'),
-
-    body('tags.*')
-        .optional()
-        .trim()
-        .isLength({ min: 1 })
-        .withMessage('Each tag must not be empty')
+        .custom((value) => {
+            if (Array.isArray(value)) {
+                return value.every(tag => typeof tag === 'string' && tag.trim().length > 0);
+            }
+            if (typeof value === 'string') {
+                // Accept comma-separated string
+                return value.split(',').every(tag => tag.trim().length > 0);
+            }
+            throw new Error('Tags must be an array or a comma-separated string');
+        })
+        .withMessage('Tags must be an array or a comma-separated string'),
 ];
 
 /**
@@ -138,6 +164,16 @@ const validateProduct = [
 const checkValidationResult = (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+        console.log('❌ VALIDATION ERRORS DETECTED:');
+        console.log('===============================');
+        errors.array().forEach((error, index) => {
+            console.log(`${index + 1}. Field: "${error.path}"`);
+            console.log(`   Value: ${JSON.stringify(error.value)}`);
+            console.log(`   Error: ${error.msg}`);
+            console.log(`   Location: ${error.location}`);
+        });
+        console.log('===============================');
+
         return res.status(400).json({
             success: false,
             message: '❌ Validation failed',
@@ -148,6 +184,7 @@ const checkValidationResult = (req, res, next) => {
             }))
         });
     }
+    console.log('✅ Validation passed successfully!');
     next();
 };
 

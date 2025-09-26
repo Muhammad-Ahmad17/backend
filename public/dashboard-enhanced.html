@@ -901,7 +901,7 @@
                                 <option value="">Select Category</option>
                                 <option value="sports-wear">Sports Wear</option>
                                 <option value="gym-wear">Gym Wear</option>
-                                <option value="fitness-wear">Fitness Wear</option>
+                                <option value="safety-wear">Safety Wear</option>
                                 <option value="streetwear">Streetwear</option>
                                 <option value="fashion-wear">Fashion Wear</option>
                                 <option value="mma-arts">MMA Arts</option>
@@ -1057,7 +1057,7 @@
                 <button type="button" class="category-btn active" data-category="">All Categories</button>
                 <button type="button" class="category-btn" data-category="sports-wear">Sports Wear</button>
                 <button type="button" class="category-btn" data-category="gym-wear">Gym Wear</button>
-                <button type="button" class="category-btn" data-category="fitness-wear">Fitness Wear</button>
+                <button type="button" class="category-btn" data-category="safety-wear">Safety Wear</button>
                 <button type="button" class="category-btn" data-category="streetwear">Streetwear</button>
                 <button type="button" class="category-btn" data-category="fashion-wear">Fashion Wear</button>
                 <button type="button" class="category-btn" data-category="mma-arts">MMA Arts</button>
@@ -1080,7 +1080,7 @@
             <div class="category-buttons" id="updateCategoryButtons">
                 <button type="button" class="category-btn" data-category="sports-wear">Sports Wear</button>
                 <button type="button" class="category-btn" data-category="gym-wear">Gym Wear</button>
-                <button type="button" class="category-btn" data-category="fitness-wear">Fitness Wear</button>
+                <button type="button" class="category-btn" data-category="safety-wear">Safety Wear</button>
                 <button type="button" class="category-btn" data-category="streetwear">Streetwear</button>
                 <button type="button" class="category-btn" data-category="fashion-wear">Fashion Wear</button>
                 <button type="button" class="category-btn" data-category="mma-arts">MMA Arts</button>
@@ -1105,7 +1105,7 @@
             <div class="category-buttons" id="deleteCategoryButtons">
                 <button type="button" class="category-btn" data-category="sports-wear">Sports Wear</button>
                 <button type="button" class="category-btn" data-category="gym-wear">Gym Wear</button>
-                <button type="button" class="category-btn" data-category="fitness-wear">Fitness Wear</button>
+                <button type="button" class="category-btn" data-category="safety-wear">Safety Wear</button>
                 <button type="button" class="category-btn" data-category="streetwear">Streetwear</button>
                 <button type="button" class="category-btn" data-category="fashion-wear">Fashion Wear</button>
                 <button type="button" class="category-btn" data-category="mma-arts">MMA Arts</button>
@@ -1223,25 +1223,35 @@
         // Category and subcategory structure
         const SUBCATEGORIES = {
             'sports-wear': [
-                'T-Shirts', 'Shorts', 'Jerseys', 'Uniforms', 'Tank Tops', 'Hoodies', 'Track Suits'
+                'American Football Uniform', 'Baseball Uniform', 'Basketball Uniform', 'Cheer Leading Uniform',
+                'Ice Hockey Uniform', 'Lacrosse Uniform', 'Rugby Uniforms', 'Volleyball Uniform',
+                'Netball Uniform', 'Cycling Uniform', 'T-Shirts', 'Tank Tops'
             ],
             'gym-wear': [
-                'Tank Tops', 'Leggings', 'Sports Bras', 'Gym Shorts', 'Hoodies', 'Tracksuits', 'Joggers'
+                'Leggings', 'Track Suits', 'Hoodies', 'Jogger Pants', 'Running Shorts',
+                'Fitness Bra', 'Yoga Sets', 'Rash Guard', 'Body Suits', 'Women Crop Tops',
+                'Tank Tops', 'Headwear and Accessories', 'Bags', 'tank-top'
             ],
-            'fitness-wear': [
-                'Yoga Sets', 'Compression Wear', 'Running Shorts', 'Fitness Tops', 'Athletic Wear'
+            'safety-wear': [
+                'Safety Jackets', 'Safety Trousers', 'Safety Shirts', 'High-Visibility Clothing',
+                'Anti-Static Clothing', 'Flame-Retardant Clothing'
             ],
             'streetwear': [
-                'T-Shirts', 'Hoodies', 'Sweatshirts', 'Casual Shorts', 'Joggers', 'Tank Tops'
+                'Onesies', 'Casual Shorts', 'Beach Shorts', 'Zipper Hoodies', 'Tie-Dye Hoodies',
+                'Sweatshirts', 'Flannel Shirts', 'Sweatpants & Bottoms', 'T-Shirts', 'Polo Shirts',
+                'Singlets & Tops'
             ],
             'fashion-wear': [
-                'Jackets', 'Casual Wear', 'Designer Tops', 'Fashion Accessories'
+                'Pull Over Jackets', 'Varsity Jackets', 'Puffers Jackets', 'Bomber Jackets',
+                'Soft Shell Jackets', 'Rain Jackets', 'Leather Jackets', 'Denim Jackets',
+                'Coach Jackets', 'Windbreaker Jackets'
             ],
             'mma-arts': [
-                'MMA Shorts', 'Rash Guards', 'MMA Gloves', 'Fighting Gear', 'Training Wear'
+                'Wrestling Gear', 'Judo Uniforms', 'Karate Uniforms', 'Kickboxing Gear',
+                'Brazilian Jiu-Jitsu (BJJ) Uniforms', 'T-Shirts'
             ],
             'accessories': [
-                'Bags', 'Caps', 'Socks', 'Gloves', 'Belts'
+                'Bags', 'Caps', 'Socks'
             ]
         };
 

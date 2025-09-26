@@ -19,11 +19,16 @@ const connectDB = require('./config/database');
 connectDB();
 
 // Routes
-app.use('/api', require('./routes/api'));
+app.use('/api', require('./routes'));
 
 // Basic route
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Dashboard route
+app.get('/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard-enhanced.html'));
 });
 
 // Error handling middleware

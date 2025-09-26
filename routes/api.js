@@ -28,7 +28,7 @@ const validateProductData = (req, res, next) => {
         });
     }
 
-    if (!category || !['sports-wear', 'gym-wear', 'fitness-wear', 'streetwear', 'fashion-wear', 'mma-arts', 'accessories'].includes(category)) {
+    if (!category || !['sportwear', 'gym-fitness-wear', 'safety-protective-wears', 'streetwear', 'fashion-wear', 'mma-arts-wears', 'accessories'].includes(category)) {
         return res.status(400).json({
             success: false,
             message: '❌ Please select a valid category'
@@ -418,585 +418,621 @@ router.get('/health', (req, res) => {
     });
 });
 
-// Category-specific API endpoints
-const categories = [
-    'sports-wear',
-    'gym-wear',
-    'fitness-wear',
-    'streetwear',
-    'fashion-wear',
-    'mma-arts',
-    'accessories'
-];
-
-// GET products by category - Sports Wear
-router.get('/products/category/sports-wear', async (req, res) => {
-    try {
-        const products = await Product.find({ category: 'sports-wear' }).sort({ createdAt: -1 });
-
-        const productsJSON = products.map(product => ({
-            id: product.id,
-            name: product.name,
-            category: product.category,
-            subcategory: product.subcategory,
-            description: product.description,
-            pictures: product.pictures || [],
-            colours: product.colours || [],
-            printingMethod: product.printingMethod,
-            sizes: product.sizes || [],
-            minimumQuantity: product.minimumQuantity,
-            featured: product.featured,
-            tags: product.tags || []
-        }));
-
-        res.json({
-            success: true,
-            category: 'sports-wear',
-            count: productsJSON.length,
-            products: productsJSON
-        });
-    } catch (error) {
-        console.error('Error fetching sports wear products:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error fetching sports wear products',
-            error: error.message
-        });
-    }
-});
-
-// GET products by category - Gym Wear
-router.get('/products/category/gym-wear', async (req, res) => {
-    try {
-        const products = await Product.find({ category: 'gym-wear' }).sort({ createdAt: -1 });
-
-        const productsJSON = products.map(product => ({
-            id: product.id,
-            name: product.name,
-            category: product.category,
-            subcategory: product.subcategory,
-            description: product.description,
-            pictures: product.pictures || [],
-            colours: product.colours || [],
-            printingMethod: product.printingMethod,
-            sizes: product.sizes || [],
-            minimumQuantity: product.minimumQuantity,
-            featured: product.featured,
-            tags: product.tags || []
-        }));
-
-        res.json({
-            success: true,
-            category: 'gym-wear',
-            count: productsJSON.length,
-            products: productsJSON
-        });
-    } catch (error) {
-        console.error('Error fetching gym wear products:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error fetching gym wear products',
-            error: error.message
-        });
-    }
-});
-
-// GET products by category - Fitness Wear
-router.get('/products/category/fitness-wear', async (req, res) => {
-    try {
-        const products = await Product.find({ category: 'fitness-wear' }).sort({ createdAt: -1 });
-
-        const productsJSON = products.map(product => ({
-            id: product.id,
-            name: product.name,
-            category: product.category,
-            subcategory: product.subcategory,
-            description: product.description,
-            pictures: product.pictures || [],
-            colours: product.colours || [],
-            printingMethod: product.printingMethod,
-            sizes: product.sizes || [],
-            minimumQuantity: product.minimumQuantity,
-            featured: product.featured,
-            tags: product.tags || []
-        }));
-
-        res.json({
-            success: true,
-            category: 'fitness-wear',
-            count: productsJSON.length,
-            products: productsJSON
-        });
-    } catch (error) {
-        console.error('Error fetching fitness wear products:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error fetching fitness wear products',
-            error: error.message
-        });
-    }
-});
-
-// GET products by category - Streetwear
-router.get('/products/category/streetwear', async (req, res) => {
-    try {
-        const products = await Product.find({ category: 'streetwear' }).sort({ createdAt: -1 });
-
-        const productsJSON = products.map(product => ({
-            id: product.id,
-            name: product.name,
-            category: product.category,
-            subcategory: product.subcategory,
-            description: product.description,
-            pictures: product.pictures || [],
-            colours: product.colours || [],
-            printingMethod: product.printingMethod,
-            sizes: product.sizes || [],
-            minimumQuantity: product.minimumQuantity,
-            featured: product.featured,
-            tags: product.tags || []
-        }));
-
-        res.json({
-            success: true,
-            category: 'streetwear',
-            count: productsJSON.length,
-            products: productsJSON
-        });
-    } catch (error) {
-        console.error('Error fetching streetwear products:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error fetching streetwear products',
-            error: error.message
-        });
-    }
-});
-
-// GET products by category - Fashion Wear
-router.get('/products/category/fashion-wear', async (req, res) => {
-    try {
-        const products = await Product.find({ category: 'fashion-wear' }).sort({ createdAt: -1 });
-
-        const productsJSON = products.map(product => ({
-            id: product.id,
-            name: product.name,
-            category: product.category,
-            subcategory: product.subcategory,
-            description: product.description,
-            pictures: product.pictures || [],
-            colours: product.colours || [],
-            printingMethod: product.printingMethod,
-            sizes: product.sizes || [],
-            minimumQuantity: product.minimumQuantity,
-            featured: product.featured,
-            tags: product.tags || []
-        }));
-
-        res.json({
-            success: true,
-            category: 'fashion-wear',
-            count: productsJSON.length,
-            products: productsJSON
-        });
-    } catch (error) {
-        console.error('Error fetching fashion wear products:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error fetching fashion wear products',
-            error: error.message
-        });
-    }
-});
-
-// GET products by category - MMA Arts
-router.get('/products/category/mma-arts', async (req, res) => {
-    try {
-        const products = await Product.find({ category: 'mma-arts' }).sort({ createdAt: -1 });
-
-        const productsJSON = products.map(product => ({
-            id: product.id,
-            name: product.name,
-            category: product.category,
-            subcategory: product.subcategory,
-            description: product.description,
-            pictures: product.pictures || [],
-            colours: product.colours || [],
-            printingMethod: product.printingMethod,
-            sizes: product.sizes || [],
-            minimumQuantity: product.minimumQuantity,
-            featured: product.featured,
-            tags: product.tags || []
-        }));
-
-        res.json({
-            success: true,
-            category: 'mma-arts',
-            count: productsJSON.length,
-            products: productsJSON
-        });
-    } catch (error) {
-        console.error('Error fetching MMA arts products:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error fetching MMA arts products',
-            error: error.message
-        });
-    }
-});
-
-// GET products by category - Accessories
-router.get('/products/category/accessories', async (req, res) => {
-    try {
-        const products = await Product.find({ category: 'accessories' }).sort({ createdAt: -1 });
-
-        const productsJSON = products.map(product => ({
-            id: product.id,
-            name: product.name,
-            category: product.category,
-            subcategory: product.subcategory,
-            description: product.description,
-            pictures: product.pictures || [],
-            colours: product.colours || [],
-            printingMethod: product.printingMethod,
-            sizes: product.sizes || [],
-            minimumQuantity: product.minimumQuantity,
-            featured: product.featured,
-            tags: product.tags || []
-        }));
-
-        res.json({
-            success: true,
-            category: 'accessories',
-            count: productsJSON.length,
-            products: productsJSON
-        });
-    } catch (error) {
-        console.error('Error fetching accessories products:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error fetching accessories products',
-            error: error.message
-        });
-    }
-});
-
-// GET all categories with product counts
-router.get('/categories/summary', async (req, res) => {
-    try {
-        const categorySummary = [];
-
-        for (const category of categories) {
-            const count = await Product.countDocuments({ category: category });
-            categorySummary.push({
-                category: category,
-                name: category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
-                count: count,
-                endpoint: `/api/products/category/${category}`
-            });
-        }
-
-        res.json({
-            success: true,
-            message: 'Categories summary fetched successfully',
-            totalCategories: categories.length,
-            categories: categorySummary
-        });
-    } catch (error) {
-        console.error('Error fetching categories summary:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error fetching categories summary',
-            error: error.message
-        });
-    }
-});
-
 // GET categories and subcategories structure
 router.get('/categories-structure', (req, res) => {
-    const { SUBCATEGORIES } = require('../middleware/validation');
 
-    res.json({
-        success: true,
-        categories: SUBCATEGORIES,
-        totalCategories: Object.keys(SUBCATEGORIES).length,
-        totalSubcategories: Object.values(SUBCATEGORIES).reduce((sum, subs) => sum + subs.length, 0)
+    // GET products by category - Fitness Wear
+    router.get('/products/category/fitness-wear', async (req, res) => {
+        try {
+            const products = await Product.find({ category: 'fitness-wear' }).sort({ createdAt: -1 });
+
+            const productsJSON = products.map(product => ({
+                id: product.id,
+                name: product.name,
+                category: product.category,
+                subcategory: product.subcategory,
+                description: product.description,
+                pictures: product.pictures || [],
+                colours: product.colours || [],
+                printingMethod: product.printingMethod,
+                sizes: product.sizes || [],
+                minimumQuantity: product.minimumQuantity,
+                featured: product.featured,
+                tags: product.tags || []
+            }));
+
+            res.json({
+                success: true,
+                category: 'fitness-wear',
+                count: productsJSON.length,
+                products: productsJSON
+            });
+        } catch (error) {
+            console.error('Error fetching fitness wear products:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error fetching fitness wear products',
+                error: error.message
+            });
+        }
     });
-});
 
-// GET products by category and subcategory
-router.get('/products/:category/:subcategory', async (req, res) => {
-    try {
-        const { category, subcategory } = req.params;
-        const { VALID_CATEGORIES, SUBCATEGORIES } = require('../middleware/validation');
+    // GET products by category - Streetwear
+    router.get('/products/category/streetwear', async (req, res) => {
+        try {
+            const products = await Product.find({ category: 'streetwear' }).sort({ createdAt: -1 });
 
-        // Decode URI components
-        const decodedCategory = decodeURIComponent(category).toLowerCase();
-        const decodedSubcategory = decodeURIComponent(subcategory);
+            const productsJSON = products.map(product => ({
+                id: product.id,
+                name: product.name,
+                category: product.category,
+                subcategory: product.subcategory,
+                description: product.description,
+                pictures: product.pictures || [],
+                colours: product.colours || [],
+                printingMethod: product.printingMethod,
+                sizes: product.sizes || [],
+                minimumQuantity: product.minimumQuantity,
+                featured: product.featured,
+                tags: product.tags || []
+            }));
 
-        if (!VALID_CATEGORIES.includes(decodedCategory)) {
-            return res.status(400).json({ success: false, message: 'Invalid category.' });
-        }
-
-        if (!SUBCATEGORIES[decodedCategory] || !SUBCATEGORIES[decodedCategory].includes(decodedSubcategory)) {
-            return res.status(400).json({ success: false, message: 'Invalid subcategory for the given category.' });
-        }
-
-        const products = await Product.find({
-            category: decodedCategory,
-            subcategory: decodedSubcategory
-        });
-
-        if (!products || products.length === 0) {
-            return res.status(404).json({ success: false, message: 'No products found for this category and subcategory.' });
-        }
-
-        res.json({
-            success: true,
-            count: products.length,
-            products: products
-        });
-
-    } catch (error) {
-        console.error('Error fetching products by subcategory:', error);
-        res.status(500).json({ success: false, message: 'Server error while fetching products.' });
-    }
-});
-
-// Category-wise product management endpoints
-// GET products by category for update/delete operations
-router.get('/products/category/:categoryName/manage', async (req, res) => {
-    try {
-        const categoryName = req.params.categoryName.toLowerCase();
-        const { VALID_CATEGORIES } = require('../middleware/validation');
-
-        if (!VALID_CATEGORIES.includes(categoryName)) {
-            return res.status(400).json({
+            res.json({
+                success: true,
+                category: 'streetwear',
+                count: productsJSON.length,
+                products: productsJSON
+            });
+        } catch (error) {
+            console.error('Error fetching streetwear products:', error);
+            res.status(500).json({
                 success: false,
-                message: `❌ Invalid category. Available categories: ${VALID_CATEGORIES.join(', ')}`
+                message: 'Error fetching streetwear products',
+                error: error.message
             });
         }
+    });
 
-        const products = await Product.find({ category: categoryName }).sort({ createdAt: -1 });
+    // GET products by category - Fashion Wear
+    router.get('/products/category/fashion-wear', async (req, res) => {
+        try {
+            const products = await Product.find({ category: 'fashion-wear' }).sort({ createdAt: -1 });
 
-        const productsForManagement = products.map(product => ({
-            id: product.id,
-            name: product.name,
-            category: product.category,
-            subcategory: product.subcategory,
-            description: product.description.substring(0, 100) + '...',
-            status: product.status,
-            featured: product.featured,
-            createdAt: product.createdAt,
-            updatedAt: product.updatedAt
-        }));
+            const productsJSON = products.map(product => ({
+                id: product.id,
+                name: product.name,
+                category: product.category,
+                subcategory: product.subcategory,
+                description: product.description,
+                pictures: product.pictures || [],
+                colours: product.colours || [],
+                printingMethod: product.printingMethod,
+                sizes: product.sizes || [],
+                minimumQuantity: product.minimumQuantity,
+                featured: product.featured,
+                tags: product.tags || []
+            }));
 
-        res.json({
-            success: true,
-            category: categoryName,
-            categoryDisplay: categoryName.split('-').map(word =>
-                word.charAt(0).toUpperCase() + word.slice(1)
-            ).join(' '),
-            count: productsForManagement.length,
-            products: productsForManagement,
-            message: `✅ Found ${productsForManagement.length} products in ${categoryName} category`
-        });
-    } catch (error) {
-        console.error(`Error fetching ${req.params.categoryName} products for management:`, error);
-        res.status(500).json({
-            success: false,
-            message: `❌ Error fetching ${req.params.categoryName} products`,
-            error: error.message
-        });
-    }
-});
-
-// Generic endpoint to get products by any category (dynamic) - For frontend consumption
-router.get('/products/category/:categoryName', async (req, res) => {
-    try {
-        const categoryName = req.params.categoryName.toLowerCase();
-        const { VALID_CATEGORIES } = require('../middleware/validation');
-
-        if (!VALID_CATEGORIES.includes(categoryName)) {
-            return res.status(400).json({
+            res.json({
+                success: true,
+                category: 'fashion-wear',
+                count: productsJSON.length,
+                products: productsJSON
+            });
+        } catch (error) {
+            console.error('Error fetching fashion wear products:', error);
+            res.status(500).json({
                 success: false,
-                message: `❌ Invalid category. Available categories: ${VALID_CATEGORIES.join(', ')}`
+                message: 'Error fetching fashion wear products',
+                error: error.message
             });
         }
+    });
 
-        const products = await Product.find({ category: categoryName }).sort({ createdAt: -1 });
+    // GET products by category - MMA Arts
+    router.get('/products/category/mma-arts', async (req, res) => {
+        try {
+            const products = await Product.find({ category: 'mma-arts' }).sort({ createdAt: -1 });
 
-        const productsJSON = products.map(product => ({
-            id: product.id,
-            name: product.name,
-            category: product.category,
-            subcategory: product.subcategory,
-            description: product.description,
-            pictures: product.pictures || [],
-            colours: product.colours || [],
-            printingMethod: product.printingMethod,
-            sizes: product.sizes || [],
-            minimumQuantity: product.minimumQuantity,
-            featured: product.featured,
-            tags: product.tags || []
-        }));
+            const productsJSON = products.map(product => ({
+                id: product.id,
+                name: product.name,
+                category: product.category,
+                subcategory: product.subcategory,
+                description: product.description,
+                pictures: product.pictures || [],
+                colours: product.colours || [],
+                printingMethod: product.printingMethod,
+                sizes: product.sizes || [],
+                minimumQuantity: product.minimumQuantity,
+                featured: product.featured,
+                tags: product.tags || []
+            }));
 
-        res.json({
-            success: true,
-            category: categoryName,
-            categoryDisplay: categoryName.split('-').map(word =>
-                word.charAt(0).toUpperCase() + word.slice(1)
-            ).join(' '),
-            count: productsJSON.length,
-            products: productsJSON
-        });
-    } catch (error) {
-        console.error(`Error fetching ${req.params.categoryName} products:`, error);
-        res.status(500).json({
-            success: false,
-            message: `❌ Error fetching ${req.params.categoryName} products`,
-            error: error.message
-        });
-    }
-});
-
-// PUT update product within category
-router.put('/products/category/:categoryName/:id', async (req, res) => {
-    try {
-        const categoryName = req.params.categoryName.toLowerCase();
-        const productId = req.params.id;
-        const { VALID_CATEGORIES } = require('../middleware/validation');
-
-        if (!VALID_CATEGORIES.includes(categoryName)) {
-            return res.status(400).json({
+            res.json({
+                success: true,
+                category: 'mma-arts',
+                count: productsJSON.length,
+                products: productsJSON
+            });
+        } catch (error) {
+            console.error('Error fetching MMA arts products:', error);
+            res.status(500).json({
                 success: false,
-                message: `❌ Invalid category. Available categories: ${VALID_CATEGORIES.join(', ')}`
+                message: 'Error fetching MMA arts products',
+                error: error.message
             });
         }
+    });
 
-        const product = await Product.findOne({ id: productId, category: categoryName });
+    // GET products by category - Accessories
+    router.get('/products/category/accessories', async (req, res) => {
+        try {
+            const products = await Product.find({ category: 'accessories' }).sort({ createdAt: -1 });
 
-        if (!product) {
-            return res.status(404).json({
+            const productsJSON = products.map(product => ({
+                id: product.id,
+                name: product.name,
+                category: product.category,
+                subcategory: product.subcategory,
+                description: product.description,
+                pictures: product.pictures || [],
+                colours: product.colours || [],
+                printingMethod: product.printingMethod,
+                sizes: product.sizes || [],
+                minimumQuantity: product.minimumQuantity,
+                featured: product.featured,
+                tags: product.tags || []
+            }));
+
+            res.json({
+                success: true,
+                category: 'accessories',
+                count: productsJSON.length,
+                products: productsJSON
+            });
+        } catch (error) {
+            console.error('Error fetching accessories products:', error);
+            res.status(500).json({
                 success: false,
-                message: `❌ Product not found in ${categoryName} category`
+                message: 'Error fetching accessories products',
+                error: error.message
             });
         }
+    });
 
-        // Update only provided fields
-        const updateFields = { updatedAt: new Date() };
+    // GET all categories with product counts
+    router.get('/categories/summary', async (req, res) => {
+        try {
+            const categorySummary = [];
 
-        if (req.body.name) updateFields.name = req.body.name.trim();
-        if (req.body.description) updateFields.description = req.body.description.trim();
-        if (req.body.subcategory) updateFields.subcategory = req.body.subcategory.trim();
-        if (req.body.minimumQuantity) updateFields.minimumQuantity = parseInt(req.body.minimumQuantity);
-        if (req.body.status) updateFields.status = req.body.status;
-        if (req.body.featured !== undefined) updateFields.featured = req.body.featured === 'true' || req.body.featured === true;
-        if (req.body.printingMethod) updateFields.printingMethod = req.body.printingMethod.trim();
-
-        // Process array fields
-        if (req.body.colours && Array.isArray(req.body.colours)) {
-            updateFields.colours = req.body.colours.filter(c => c.trim());
-        }
-        if (req.body.sizes && Array.isArray(req.body.sizes)) {
-            updateFields.sizes = req.body.sizes;
-        }
-        if (req.body.tags) {
-            updateFields.tags = Array.isArray(req.body.tags)
-                ? req.body.tags.filter(t => t.trim())
-                : req.body.tags.split(',').map(t => t.trim()).filter(t => t);
-        }
-
-        console.log(`🔄 Updating ${categoryName} product:`, productId, 'with fields:', updateFields);
-
-        const updatedProduct = await Product.findOneAndUpdate(
-            { id: productId, category: categoryName },
-            updateFields,
-            { new: true, runValidators: true }
-        );
-
-        res.json({
-            success: true,
-            message: `✅ ${categoryName} product updated successfully!`,
-            category: categoryName,
-            product: updatedProduct
-        });
-
-    } catch (error) {
-        console.error('❌ Error updating product:', error);
-
-        if (error.name === 'ValidationError') {
-            const errors = Object.values(error.errors).map(err => err.message);
-            return res.status(400).json({
-                success: false,
-                message: '❌ Validation error: ' + errors.join(', ')
-            });
-        }
-
-        res.status(500).json({
-            success: false,
-            message: '❌ Error updating product: ' + error.message
-        });
-    }
-});
-
-// DELETE product within category
-router.delete('/products/category/:categoryName/:id', async (req, res) => {
-    try {
-        const categoryName = req.params.categoryName.toLowerCase();
-        const productId = req.params.id;
-        const { VALID_CATEGORIES } = require('../middleware/validation');
-
-        if (!VALID_CATEGORIES.includes(categoryName)) {
-            return res.status(400).json({
-                success: false,
-                message: `❌ Invalid category. Available categories: ${VALID_CATEGORIES.join(', ')}`
-            });
-        }
-
-        const product = await Product.findOne({ id: productId, category: categoryName });
-
-        if (!product) {
-            return res.status(404).json({
-                success: false,
-                message: `❌ Product not found in ${categoryName} category`
-            });
-        }
-
-        console.log(`🗑️ Deleting ${categoryName} product:`, productId);
-
-        // Delete images from Cloudinary if they exist
-        for (const imageUrl of product.pictures || []) {
-            try {
-                const publicId = extractPublicId(imageUrl);
-                if (publicId) {
-                    await deleteImage(publicId);
-                    console.log('🗑️ Deleted image:', publicId);
-                }
-            } catch (deleteError) {
-                console.error('❌ Error deleting image:', deleteError);
+            for (const category of categories) {
+                const count = await Product.countDocuments({ category: category });
+                categorySummary.push({
+                    category: category,
+                    name: category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+                    count: count,
+                    endpoint: `/api/products/category/${category}`
+                });
             }
-        }
 
-        // Delete product from database
-        await Product.findOneAndDelete({ id: productId, category: categoryName });
-        console.log(`✅ ${categoryName} product deleted successfully:`, productId);
+            res.json({
+                success: true,
+                message: 'Categories summary fetched successfully',
+                totalCategories: categories.length,
+                categories: categorySummary
+            });
+        } catch (error) {
+            console.error('Error fetching categories summary:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error fetching categories summary',
+                error: error.message
+            });
+        }
+    });
+
+    // GET categories and subcategories structure
+    router.get('/categories-structure', (req, res) => {
+        const { SUBCATEGORIES } = require('../middleware/validation');
 
         res.json({
             success: true,
-            message: `✅ ${categoryName} product deleted successfully!`,
-            category: categoryName,
-            deletedId: productId
+            categories: SUBCATEGORIES,
+            totalCategories: Object.keys(SUBCATEGORIES).length,
+            totalSubcategories: Object.values(SUBCATEGORIES).reduce((sum, subs) => sum + subs.length, 0)
         });
+    });
 
-    } catch (error) {
-        console.error('❌ Error deleting product:', error);
-        res.status(500).json({
-            success: false,
-            message: '❌ Error deleting product: ' + error.message
-        });
-    }
-});
+    // GET products by category and subcategory
+    router.get('/products/:category/:subcategory', async (req, res) => {
+        try {
+            const { category, subcategory } = req.params;
+            const { VALID_CATEGORIES, SUBCATEGORIES } = require('../middleware/validation');
+
+            // Decode URI components
+            const decodedCategory = decodeURIComponent(category).toLowerCase();
+            const decodedSubcategory = decodeURIComponent(subcategory);
+
+            if (!VALID_CATEGORIES.includes(decodedCategory)) {
+                return res.status(400).json({ success: false, message: 'Invalid category.' });
+            }
+
+            if (!SUBCATEGORIES[decodedCategory] || !SUBCATEGORIES[decodedCategory].includes(decodedSubcategory)) {
+                return res.status(400).json({ success: false, message: 'Invalid subcategory for the given category.' });
+            }
+
+            const products = await Product.find({
+                category: decodedCategory,
+                subcategory: decodedSubcategory
+            });
+
+            if (!products || products.length === 0) {
+                return res.status(404).json({ success: false, message: 'No products found for this category and subcategory.' });
+            }
+
+            res.json({
+                success: true,
+                count: products.length,
+                products: products
+            });
+
+        } catch (error) {
+            console.error('Error fetching products by subcategory:', error);
+            res.status(500).json({ success: false, message: 'Server error while fetching products.' });
+        }
+    });
+
+    // Category-wise product management endpoints
+    // GET products by category for update/delete operations
+    router.get('/products/category/:categoryName/manage', async (req, res) => {
+        try {
+            const categoryName = req.params.categoryName.toLowerCase();
+            const { VALID_CATEGORIES } = require('../middleware/validation');
+
+            if (!VALID_CATEGORIES.includes(categoryName)) {
+                return res.status(400).json({
+                    success: false,
+                    message: `❌ Invalid category. Available categories: ${VALID_CATEGORIES.join(', ')}`
+                });
+            }
+
+            const products = await Product.find({ category: categoryName }).sort({ createdAt: -1 });
+
+            const productsForManagement = products.map(product => ({
+                id: product.id,
+                name: product.name,
+                category: product.category,
+                subcategory: product.subcategory,
+                description: product.description.substring(0, 100) + '...',
+                status: product.status,
+                featured: product.featured,
+                createdAt: product.createdAt,
+                updatedAt: product.updatedAt
+            }));
+
+            res.json({
+                success: true,
+                category: categoryName,
+                categoryDisplay: categoryName.split('-').map(word =>
+                    word.charAt(0).toUpperCase() + word.slice(1)
+                ).join(' '),
+                count: productsForManagement.length,
+                products: productsForManagement,
+                message: `✅ Found ${productsForManagement.length} products in ${categoryName} category`
+            });
+        } catch (error) {
+            console.error(`Error fetching ${req.params.categoryName} products for management:`, error);
+            res.status(500).json({
+                success: false,
+                message: `❌ Error fetching ${req.params.categoryName} products`,
+                error: error.message
+            });
+        }
+    });
+
+    // Generic endpoint to get products by any category (dynamic) - For frontend consumption
+    router.get('/products/category/:categoryName', async (req, res) => {
+        try {
+            const categoryName = req.params.categoryName.toLowerCase();
+            const { VALID_CATEGORIES } = require('../middleware/validation');
+
+            if (!VALID_CATEGORIES.includes(categoryName)) {
+                return res.status(400).json({
+                    success: false,
+                    message: `❌ Invalid category. Available categories: ${VALID_CATEGORIES.join(', ')}`
+                });
+            }
+
+            const products = await Product.find({ category: categoryName }).sort({ createdAt: -1 });
+
+            const productsJSON = products.map(product => ({
+                id: product.id,
+                name: product.name,
+                category: product.category,
+                subcategory: product.subcategory,
+                description: product.description,
+                pictures: product.pictures || [],
+                colours: product.colours || [],
+                printingMethod: product.printingMethod,
+                sizes: product.sizes || [],
+                minimumQuantity: product.minimumQuantity,
+                featured: product.featured,
+                tags: product.tags || []
+            }));
+
+            res.json({
+                success: true,
+                category: categoryName,
+                categoryDisplay: categoryName.split('-').map(word =>
+                    word.charAt(0).toUpperCase() + word.slice(1)
+                ).join(' '),
+                count: productsJSON.length,
+                products: productsJSON
+            });
+        } catch (error) {
+            console.error(`Error fetching ${req.params.categoryName} products:`, error);
+            res.status(500).json({
+                success: false,
+                message: `❌ Error fetching ${req.params.categoryName} products`,
+                error: error.message
+            });
+        }
+    });
+
+    // PUT update product within category
+    router.put('/products/category/:categoryName/:id', async (req, res) => {
+        try {
+            const categoryName = req.params.categoryName.toLowerCase();
+            const productId = req.params.id;
+            const { VALID_CATEGORIES } = require('../middleware/validation');
+
+            if (!VALID_CATEGORIES.includes(categoryName)) {
+                return res.status(400).json({
+                    success: false,
+                    message: `❌ Invalid category. Available categories: ${VALID_CATEGORIES.join(', ')}`
+                });
+            }
+
+            const product = await Product.findOne({ id: productId, category: categoryName });
+
+            if (!product) {
+                return res.status(404).json({
+                    success: false,
+                    message: `❌ Product not found in ${categoryName} category`
+                });
+            }
+
+            // Update only provided fields
+            const updateFields = { updatedAt: new Date() };
+
+            if (req.body.name) updateFields.name = req.body.name.trim();
+            if (req.body.description) updateFields.description = req.body.description.trim();
+            if (req.body.subcategory) updateFields.subcategory = req.body.subcategory.trim();
+            if (req.body.minimumQuantity) updateFields.minimumQuantity = parseInt(req.body.minimumQuantity);
+            if (req.body.status) updateFields.status = req.body.status;
+            if (req.body.featured !== undefined) updateFields.featured = req.body.featured === 'true' || req.body.featured === true;
+            if (req.body.printingMethod) updateFields.printingMethod = req.body.printingMethod.trim();
+
+            // Process array fields
+            if (req.body.colours && Array.isArray(req.body.colours)) {
+                updateFields.colours = req.body.colours.filter(c => c.trim());
+            }
+            if (req.body.sizes && Array.isArray(req.body.sizes)) {
+                updateFields.sizes = req.body.sizes;
+            }
+            if (req.body.tags) {
+                updateFields.tags = Array.isArray(req.body.tags)
+                    ? req.body.tags.filter(t => t.trim())
+                    : req.body.tags.split(',').map(t => t.trim()).filter(t => t);
+            }
+
+            console.log(`🔄 Updating ${categoryName} product:`, productId, 'with fields:', updateFields);
+
+            const updatedProduct = await Product.findOneAndUpdate(
+                { id: productId, category: categoryName },
+                updateFields,
+                { new: true, runValidators: true }
+            );
+
+            res.json({
+                success: true,
+                message: `✅ ${categoryName} product updated successfully!`,
+                category: categoryName,
+                product: updatedProduct
+            });
+
+        } catch (error) {
+            console.error('❌ Error updating product:', error);
+
+            if (error.name === 'ValidationError') {
+                const errors = Object.values(error.errors).map(err => err.message);
+                return res.status(400).json({
+                    success: false,
+                    message: '❌ Validation error: ' + errors.join(', ')
+                });
+            }
+
+            res.status(500).json({
+                success: false,
+                message: '❌ Error updating product: ' + error.message
+            });
+        }
+    });
+
+    // DELETE product within category
+    router.delete('/products/category/:categoryName/:id', async (req, res) => {
+        try {
+            const categoryName = req.params.categoryName.toLowerCase();
+            const productId = req.params.id;
+            const { VALID_CATEGORIES } = require('../middleware/validation');
+
+            if (!VALID_CATEGORIES.includes(categoryName)) {
+                return res.status(400).json({
+                    success: false,
+                    message: `❌ Invalid category. Available categories: ${VALID_CATEGORIES.join(', ')}`
+                });
+            }
+
+            const product = await Product.findOne({ id: productId, category: categoryName });
+
+            if (!product) {
+                return res.status(404).json({
+                    success: false,
+                    message: `❌ Product not found in ${categoryName} category`
+                });
+            }
+
+            console.log(`🗑️ Deleting ${categoryName} product:`, productId);
+
+            // Delete images from Cloudinary if they exist
+            for (const imageUrl of product.pictures || []) {
+                try {
+                    const publicId = extractPublicId(imageUrl);
+                    if (publicId) {
+                        await deleteImage(publicId);
+                        console.log('🗑️ Deleted image:', publicId);
+                    }
+                } catch (deleteError) {
+                    console.error('❌ Error deleting image:', deleteError);
+                }
+            }
+
+            // Delete product from database
+            await Product.findOneAndDelete({ id: productId, category: categoryName });
+            console.log(`✅ ${categoryName} product deleted successfully:`, productId);
+
+            res.json({
+                success: true,
+                message: `✅ ${categoryName} product deleted successfully!`,
+                category: categoryName,
+                deletedId: productId
+            });
+
+        } catch (error) {
+            console.error('❌ Error deleting product:', error);
+            res.status(500).json({
+                success: false,
+                message: '❌ Error deleting product: ' + error.message
+            });
+        }
+    });
+
+    // GET products by subcategory
+    router.get('/products/subcategory/:categoryName/:subcategoryName', async (req, res) => {
+        try {
+            const categoryName = req.params.categoryName.toLowerCase();
+            const subcategoryName = req.params.subcategoryName;
+            const { VALID_CATEGORIES, SUBCATEGORIES } = require('../middleware/validation');
+
+            if (!VALID_CATEGORIES.includes(categoryName)) {
+                return res.status(400).json({
+                    success: false,
+                    message: `❌ Invalid category. Available categories: ${VALID_CATEGORIES.join(', ')}`
+                });
+            }
+
+            if (!SUBCATEGORIES[categoryName] || !SUBCATEGORIES[categoryName].includes(subcategoryName)) {
+                return res.status(400).json({
+                    success: false,
+                    message: `❌ Invalid subcategory for ${categoryName}. Available subcategories: ${SUBCATEGORIES[categoryName]?.join(', ') || 'none'}`
+                });
+            }
+
+            const products = await Product.find({
+                category: categoryName,
+                subcategory: subcategoryName
+            }).sort({ createdAt: -1 });
+
+            const productsJSON = products.map(product => ({
+                id: product.id,
+                name: product.name,
+                category: product.category,
+                subcategory: product.subcategory,
+                description: product.description,
+                pictures: product.pictures || [],
+                colours: product.colours || [],
+                printingMethod: product.printingMethod,
+                sizes: product.sizes || [],
+                minimumQuantity: product.minimumQuantity,
+                featured: product.featured,
+                tags: product.tags || [],
+                status: product.status,
+                createdAt: product.createdAt
+            }));
+
+            res.json({
+                success: true,
+                category: categoryName,
+                subcategory: subcategoryName,
+                count: productsJSON.length,
+                products: productsJSON
+            });
+
+        } catch (error) {
+            console.error('❌ Error fetching subcategory products:', error);
+            res.status(500).json({
+                success: false,
+                message: '❌ Error fetching products: ' + error.message
+            });
+        }
+    });
+
+    // GET all subcategories for a specific category
+    router.get('/subcategories/:categoryName', async (req, res) => {
+        try {
+            const categoryName = req.params.categoryName.toLowerCase();
+            const { VALID_CATEGORIES, SUBCATEGORIES } = require('../middleware/validation');
+
+            if (!VALID_CATEGORIES.includes(categoryName)) {
+                return res.status(400).json({
+                    success: false,
+                    message: `❌ Invalid category. Available categories: ${VALID_CATEGORIES.join(', ')}`
+                });
+            }
+
+            const subcategories = SUBCATEGORIES[categoryName] || [];
+
+            res.json({
+                success: true,
+                category: categoryName,
+                subcategories: subcategories
+            });
+
+        } catch (error) {
+            console.error('❌ Error fetching subcategories:', error);
+            res.status(500).json({
+                success: false,
+                message: '❌ Error fetching subcategories: ' + error.message
+            });
+        }
+    });
+
+    // GET all available categories with their subcategories
+    router.get('/categories', async (req, res) => {
+        try {
+            const { VALID_CATEGORIES, SUBCATEGORIES } = require('../middleware/validation');
+
+            const categoriesData = VALID_CATEGORIES.map(category => ({
+                name: category,
+                displayName: category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+                subcategories: SUBCATEGORIES[category] || []
+            }));
+
+            res.json({
+                success: true,
+                categories: categoriesData
+            });
+
+        } catch (error) {
+            console.error('❌ Error fetching categories:', error);
+            res.status(500).json({
+                success: false,
+                message: '❌ Error fetching categories: ' + error.message
+            });
+        }
+    });
 
 
-module.exports = router;
+    module.exports = router;
+
