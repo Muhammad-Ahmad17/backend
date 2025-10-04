@@ -3,9 +3,10 @@ const router = express.Router();
 const Product = require('../models/Product');
 const { upload, deleteImage, extractPublicId } = require('../config/cloudinary');
 const { validateProduct, checkValidationResult, handleUploadError } = require('../middleware/validation');
+const { requireAuth } = require('../middleware/auth');
 
 // CREATE product with image upload
-router.post('/create-product', upload.array('images', 5), handleUploadError, (req, res, next) => {
+router.post('/create-product', requireAuth, upload.array('images', 5), handleUploadError, (req, res, next) => {
     console.log('🔍 FULL REQUEST BODY INSPECTION:');
     console.log('================================');
     console.log('Raw req.body:', JSON.stringify(req.body, null, 2));
@@ -149,7 +150,7 @@ router.post('/create-product', upload.array('images', 5), handleUploadError, (re
 });
 
 // CREATE product (JSON format - no image upload)
-router.post('/create-product-json', validateProduct, checkValidationResult, async (req, res) => {
+router.post('/create-product-json', requireAuth, validateProduct, checkValidationResult, async (req, res) => {
     try {
         const { id, name, category, subcategory, description, colours, printingMethod, sizes, minimumQuantity, featured, tags } = req.body;
 

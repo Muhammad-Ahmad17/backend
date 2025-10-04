@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
 const { validateProduct, checkValidationResult } = require('../middleware/validation');
+const { requireAuth } = require('../middleware/auth');
 
 // GET products by category (dynamic route)
 router.get('/category/:categoryName', async (req, res) => {
@@ -197,7 +198,7 @@ router.get('/:category/:subcategory', async (req, res) => {
 });
 
 // UPDATE product by category and ID
-router.put('/category/:categoryName/:id', async (req, res) => {
+router.put('/category/:categoryName/:id', requireAuth, async (req, res) => {
     try {
         const categoryName = req.params.categoryName.toLowerCase();
         const productId = req.params.id;
@@ -264,7 +265,7 @@ router.put('/category/:categoryName/:id', async (req, res) => {
 });
 
 // DELETE product by category and ID
-router.delete('/category/:categoryName/:id', async (req, res) => {
+router.delete('/category/:categoryName/:id', requireAuth, async (req, res) => {
     try {
         const categoryName = req.params.categoryName.toLowerCase();
         const productId = req.params.id;

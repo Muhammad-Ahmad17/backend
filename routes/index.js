@@ -8,18 +8,22 @@ const categoriesRoutes = require('./categories');
 const summaryRoutes = require('./summary');
 const uploadsRoutes = require('./uploads');
 
+// Import authentication middleware
+const { requireAuth } = require('../middleware/auth');
+
 // Public routes (no authentication required)
 router.use('/', authRoutes);
 router.use('/', categoriesRoutes);
+router.use('/', summaryRoutes); // Summary routes are now public (read-only data)
 
-// Protected routes (authentication required)
-const { requireAuth } = require('../middleware/auth');
-router.use('/products', requireAuth, productsRoutes);
-router.use('/', requireAuth, summaryRoutes);
+// Products routes - Mixed (GET public, POST/PUT/DELETE protected)
+router.use('/products', productsRoutes);
+
+// Protected routes (authentication required - only write operations)
 router.use('/', requireAuth, uploadsRoutes);
 
-// Handle the specific products-json endpoint (protected)
-router.get('/products-json', requireAuth, async (req, res) => {
+// Handle the specific products-json endpoint (public for GET)
+router.get('/products-json', async (req, res) => {
     try {
         const Product = require('../models/Product');
         const products = await Product.find({}).sort({ createdAt: -1 });
