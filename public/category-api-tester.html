@@ -182,108 +182,275 @@
             color: var(--warning-color);
             font-weight: bold;
         }
+
+        /* Authentication Modal Styles */
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .auth-modal {
+            background: var(--bg-secondary);
+            padding: 40px;
+            border-radius: 16px;
+            border: 2px solid var(--accent-color);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .auth-modal h2 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .auth-modal p {
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .auth-form-group {
+            margin-bottom: 20px;
+        }
+
+        .auth-form-group label {
+            display: block;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .auth-form-group input {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .auth-form-group input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(166, 226, 46, 0.1);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent-color);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(166, 226, 46, 0.3);
+        }
+
+        .auth-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .auth-error {
+            background: rgba(249, 38, 114, 0.1);
+            border: 1px solid var(--warning-color);
+            color: var(--warning-color);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .auth-note {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 12px;
+            margin-top: 20px;
+        }
+
+        .page-content {
+            display: none;
+        }
+
+        .page-content.authenticated {
+            display: block;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: var(--warning-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1>🛍️ Category & Subcategory API Tester</h1>
+    <!-- Authentication Modal (Stateless - Always Required) -->
+    <div id="authOverlay" class="auth-overlay">
+        <div class="auth-modal">
+            <h2>🔐 Authentication Required</h2>
+            <p>Enter credentials to access API Tester</p>
 
-        <div class="category-buttons">
-            <button class="category-btn summary-btn" onclick="fetchCategoriesSummary()">
-                📊 Categories Summary
-            </button>
+            <div id="authError" class="auth-error"></div>
 
-            <button class="category-btn" onclick="fetchCategoryProducts('sports-wear')">
-                🏈 Sports Wear
-            </button>
+            <form id="authForm">
+                <div class="auth-form-group">
+                    <label for="authUsername">Username</label>
+                    <input type="text" id="authUsername" required autofocus>
+                </div>
 
-            <button class="category-btn" onclick="fetchCategoryProducts('gym-wear')">
-                💪 Gym Wear
-            </button>
+                <div class="auth-form-group">
+                    <label for="authPassword">Password</label>
+                    <input type="password" id="authPassword" required>
+                </div>
 
-            <button class="category-btn" onclick="fetchCategoryProducts('safety-wear')">
-                🦺 Safety Wear
-            </button>
+                <button type="submit" class="auth-btn" id="authBtn">
+                    Authenticate
+                </button>
+            </form>
 
-            <button class="category-btn" onclick="fetchCategoryProducts('streetwear')">
-                👕 Streetwear
-            </button>
-
-            <button class="category-btn" onclick="fetchCategoryProducts('fashion-wear')">
-                👗 Fashion Wear
-            </button>
-
-            <button class="category-btn" onclick="fetchCategoryProducts('mma-arts')">
-                🥋 MMA Arts
-            </button>
-
-            <button class="category-btn" onclick="fetchCategoryProducts('accessories')">
-                🎒 Accessories
-            </button>
-        </div>
-
-        <!-- Subcategory Section -->
-        <div id="subcategory-section" style="display: none; margin: 20px 0;">
-            <h3 id="subcategory-title" style="color: #2c3e50; margin-bottom: 15px;"></h3>
-            <div id="subcategory-buttons" class="category-buttons"></div>
-        </div>
-
-        <div id="results" class="results">
-            <p style="text-align: center; color: #666;">Select a category above to test the API endpoints</p>
+            <div class="auth-note">
+                🔒 Stateless session - credentials required each time
+            </div>
         </div>
     </div>
 
-    <script>
-        const resultsDiv = document.getElementById('results');
+    <!-- Main Content (Hidden until authenticated) -->
+    <div class="page-content" id="pageContent">
+        <button class="logout-btn" onclick="logout()">🔓 Logout</button>
 
-        // Category and subcategory structure (matching current database)
-        const SUBCATEGORIES = {
-            'sports-wear': [
-                'American Football Uniform', 'Baseball Uniform', 'Basketball Uniform', 'Cheer Leading Uniform',
-                'Ice Hockey Uniform', 'Lacrosse Uniform', 'Rugby Uniforms', 'Volleyball Uniform',
-                'Netball Uniform', 'Cycling Uniform', 'T-Shirts', 'Tank Tops'
-            ],
-            'gym-wear': [
-                'Leggings', 'Track Suits', 'Hoodies', 'Jogger Pants', 'Running Shorts',
-                'Fitness Bra', 'Yoga Sets', 'Rash Guard', 'Body Suits', 'Women Crop Tops',
-                'Tank Tops', 'Headwear and Accessories', 'Bags', 'tank-top'
-            ],
-            'safety-wear': [
-                'Safety Jackets', 'Safety Trousers', 'Safety Shirts', 'High-Visibility Clothing',
-                'Anti-Static Clothing', 'Flame-Retardant Clothing'
-            ],
-            'streetwear': [
-                'Onesies', 'Casual Shorts', 'Beach Shorts', 'Zipper Hoodies', 'Tie-Dye Hoodies',
-                'Sweatshirts', 'Flannel Shirts', 'Sweatpants & Bottoms', 'T-Shirts', 'Polo Shirts',
-                'Singlets & Tops'
-            ],
-            'fashion-wear': [
-                'Pull Over Jackets', 'Varsity Jackets', 'Puffers Jackets', 'Bomber Jackets',
-                'Soft Shell Jackets', 'Rain Jackets', 'Leather Jackets', 'Denim Jackets',
-                'Coach Jackets', 'Windbreaker Jackets'
-            ],
-            'mma-arts': [
-                'Wrestling Gear', 'Judo Uniforms', 'Karate Uniforms', 'Kickboxing Gear',
-                'Brazilian Jiu-Jitsu (BJJ) Uniforms', 'T-Shirts'
-            ],
-            'accessories': [
-                'Bags', 'Caps', 'Socks'
-            ]
-        };
+        <div class="container">
+            <h1>🛍️ Category & Subcategory API Tester</h1>
 
-        function showLoading(message) {
-            resultsDiv.innerHTML = `<div class="loading">🔄 ${message}</div>`;
-        }
+            <div class="category-buttons">
+                <button class="category-btn summary-btn" onclick="fetchCategoriesSummary()">
+                    📊 Categories Summary
+                </button>
 
-        function showError(message) {
-            resultsDiv.innerHTML = `<div class="error">❌ Error: ${message}</div>`;
-        }
+                <button class="category-btn" onclick="fetchCategoryProducts('sports-wear')">
+                    🏈 Sports Wear
+                </button>
 
-        function showResults(title, endpoint, data) {
-            const jsonString = JSON.stringify(data, null, 2);
+                <button class="category-btn" onclick="fetchCategoryProducts('gym-wear')">
+                    💪 Gym Wear
+                </button>
 
-            resultsDiv.innerHTML = `
+                <button class="category-btn" onclick="fetchCategoryProducts('safety-wear')">
+                    🦺 Safety Wear
+                </button>
+
+                <button class="category-btn" onclick="fetchCategoryProducts('streetwear')">
+                    👕 Streetwear
+                </button>
+
+                <button class="category-btn" onclick="fetchCategoryProducts('fashion-wear')">
+                    👗 Fashion Wear
+                </button>
+
+                <button class="category-btn" onclick="fetchCategoryProducts('mma-arts')">
+                    🥋 MMA Arts
+                </button>
+
+                <button class="category-btn" onclick="fetchCategoryProducts('accessories')">
+                    🎒 Accessories
+                </button>
+            </div>
+
+            <!-- Subcategory Section -->
+            <div id="subcategory-section" style="display: none; margin: 20px 0;">
+                <h3 id="subcategory-title" style="color: #2c3e50; margin-bottom: 15px;"></h3>
+                <div id="subcategory-buttons" class="category-buttons"></div>
+            </div>
+
+            <div id="results" class="results">
+                <p style="text-align: center; color: #666;">Select a category above to test the API endpoints</p>
+            </div>
+        </div>
+
+        <script>
+            const resultsDiv = document.getElementById('results');
+
+            // Category and subcategory structure (matching current database)
+            const SUBCATEGORIES = {
+                'sports-wear': [
+                    'American Football Uniform', 'Baseball Uniform', 'Basketball Uniform', 'Cheer Leading Uniform',
+                    'Ice Hockey Uniform', 'Lacrosse Uniform', 'Rugby Uniforms', 'Volleyball Uniform',
+                    'Netball Uniform', 'Cycling Uniform', 'T-Shirts', 'Tank Tops'
+                ],
+                'gym-wear': [
+                    'Leggings', 'Track Suits', 'Hoodies', 'Jogger Pants', 'Running Shorts',
+                    'Fitness Bra', 'Yoga Sets', 'Rash Guard', 'Body Suits', 'Women Crop Tops',
+                    'Tank Tops', 'Headwear and Accessories', 'Bags', 'tank-top'
+                ],
+                'safety-wear': [
+                    'Safety Jackets', 'Safety Trousers', 'Safety Shirts', 'High-Visibility Clothing',
+                    'Anti-Static Clothing', 'Flame-Retardant Clothing'
+                ],
+                'streetwear': [
+                    'Onesies', 'Casual Shorts', 'Beach Shorts', 'Zipper Hoodies', 'Tie-Dye Hoodies',
+                    'Sweatshirts', 'Flannel Shirts', 'Sweatpants & Bottoms', 'T-Shirts', 'Polo Shirts',
+                    'Singlets & Tops'
+                ],
+                'fashion-wear': [
+                    'Pull Over Jackets', 'Varsity Jackets', 'Puffers Jackets', 'Bomber Jackets',
+                    'Soft Shell Jackets', 'Rain Jackets', 'Leather Jackets', 'Denim Jackets',
+                    'Coach Jackets', 'Windbreaker Jackets'
+                ],
+                'mma-arts': [
+                    'Wrestling Gear', 'Judo Uniforms', 'Karate Uniforms', 'Kickboxing Gear',
+                    'Brazilian Jiu-Jitsu (BJJ) Uniforms', 'T-Shirts'
+                ],
+                'accessories': [
+                    'Bags', 'Caps', 'Socks'
+                ]
+            };
+
+            function showLoading(message) {
+                resultsDiv.innerHTML = `<div class="loading">🔄 ${message}</div>`;
+            }
+
+            function showError(message) {
+                resultsDiv.innerHTML = `<div class="error">❌ Error: ${message}</div>`;
+            }
+
+            function showResults(title, endpoint, data) {
+                const jsonString = JSON.stringify(data, null, 2);
+
+                resultsDiv.innerHTML = `
                 <div class="result-header">
                     <strong>${title}</strong>
                     ${data.count !== undefined ? `<span class="product-count">${data.count} products</span>` : ''}
@@ -293,119 +460,204 @@
                     <pre>${jsonString}</pre>
                 </div>
             `;
-        }
+            }
 
-        function showSubcategories(category) {
-            const subcategorySection = document.getElementById('subcategory-section');
-            const subcategoryTitle = document.getElementById('subcategory-title');
-            const subcategoryButtons = document.getElementById('subcategory-buttons');
+            function showSubcategories(category) {
+                const subcategorySection = document.getElementById('subcategory-section');
+                const subcategoryTitle = document.getElementById('subcategory-title');
+                const subcategoryButtons = document.getElementById('subcategory-buttons');
 
-            if (SUBCATEGORIES[category]) {
-                subcategoryTitle.textContent = `📂 ${category.replace(/-/g, ' ').toUpperCase()} Subcategories:`;
+                if (SUBCATEGORIES[category]) {
+                    subcategoryTitle.textContent = `📂 ${category.replace(/-/g, ' ').toUpperCase()} Subcategories:`;
 
-                subcategoryButtons.innerHTML = SUBCATEGORIES[category].map(subcategory => `
+                    subcategoryButtons.innerHTML = SUBCATEGORIES[category].map(subcategory => `
                     <button class="category-btn" onclick="fetchSubcategoryProducts('${category}', '${subcategory}')">
                         ${subcategory}
                     </button>
                 `).join('');
 
-                subcategorySection.style.display = 'block';
-            } else {
-                subcategorySection.style.display = 'none';
-            }
-        }
-
-        async function fetchCategoriesSummary() {
-            showLoading('Fetching categories summary...');
-            document.getElementById('subcategory-section').style.display = 'none';
-
-            try {
-                // Since we don't have a summary endpoint, let's create a comprehensive overview
-                const categoryData = {};
-
-                for (const category of Object.keys(SUBCATEGORIES)) {
-                    try {
-                        const response = await fetch(`/api/products/category/${category}`);
-                        const data = await response.json();
-                        categoryData[category] = {
-                            success: data.success,
-                            count: data.count || 0,
-                            subcategories: SUBCATEGORIES[category].length
-                        };
-                    } catch (error) {
-                        categoryData[category] = {
-                            success: false,
-                            error: error.message,
-                            subcategories: SUBCATEGORIES[category].length
-                        };
-                    }
-                }
-
-                showResults(
-                    '📊 Categories & Subcategories Summary',
-                    'Multiple API calls to /api/products/category/{category}',
-                    {
-                        success: true,
-                        message: 'Categories and subcategories overview',
-                        categories: categoryData,
-                        totalCategories: Object.keys(SUBCATEGORIES).length,
-                        totalSubcategories: Object.values(SUBCATEGORIES).reduce((sum, subs) => sum + subs.length, 0)
-                    }
-                );
-            } catch (error) {
-                showError('Network error: ' + error.message);
-            }
-        }
-
-        async function fetchCategoryProducts(category) {
-            showLoading(`Fetching ${category.replace(/-/g, ' ')} products...`);
-            showSubcategories(category);
-
-            try {
-                const response = await fetch(`/api/products/category/${category}`);
-                const data = await response.json();
-
-                if (data.success) {
-                    showResults(
-                        `${category.replace(/-/g, ' ').toUpperCase()} Products`,
-                        `/api/products/category/${category}`,
-                        data
-                    );
+                    subcategorySection.style.display = 'block';
                 } else {
-                    showError(data.message || `Failed to fetch ${category} products`);
+                    subcategorySection.style.display = 'none';
                 }
-            } catch (error) {
-                showError('Network error: ' + error.message);
             }
-        }
 
-        async function fetchSubcategoryProducts(category, subcategory) {
-            showLoading(`Fetching ${subcategory} products from ${category.replace(/-/g, ' ')}...`);
+            async function fetchCategoriesSummary() {
+                showLoading('Fetching categories summary...');
+                document.getElementById('subcategory-section').style.display = 'none';
 
-            try {
-                const encodedSubcategory = encodeURIComponent(subcategory);
-                const response = await fetch(`/api/products/subcategory/${category}/${encodedSubcategory}`);
-                const data = await response.json();
+                try {
+                    // Since we don't have a summary endpoint, let's create a comprehensive overview
+                    const categoryData = {};
 
-                if (data.success) {
+                    for (const category of Object.keys(SUBCATEGORIES)) {
+                        try {
+                            const response = await fetch(`/api/products/category/${category}`);
+                            const data = await response.json();
+                            categoryData[category] = {
+                                success: data.success,
+                                count: data.count || 0,
+                                subcategories: SUBCATEGORIES[category].length
+                            };
+                        } catch (error) {
+                            categoryData[category] = {
+                                success: false,
+                                error: error.message,
+                                subcategories: SUBCATEGORIES[category].length
+                            };
+                        }
+                    }
+
                     showResults(
-                        `${subcategory} (${category.replace(/-/g, ' ')})`,
-                        `/api/products/subcategory/${category}/${encodedSubcategory}`,
-                        data
+                        '📊 Categories & Subcategories Summary',
+                        'Multiple API calls to /api/products/category/{category}',
+                        {
+                            success: true,
+                            message: 'Categories and subcategories overview',
+                            categories: categoryData,
+                            totalCategories: Object.keys(SUBCATEGORIES).length,
+                            totalSubcategories: Object.values(SUBCATEGORIES).reduce((sum, subs) => sum + subs.length, 0)
+                        }
                     );
-                } else {
-                    showError(data.message || `No products found for ${subcategory} in ${category}`);
+                } catch (error) {
+                    showError('Network error: ' + error.message);
                 }
-            } catch (error) {
-                showError('Network error: ' + error.message);
             }
-        }
 
-        // Auto-load categories summary on page load
-        window.addEventListener('DOMContentLoaded', function () {
-            setTimeout(fetchCategoriesSummary, 500);
-        });
-    </script>
+            async function fetchCategoryProducts(category) {
+                showLoading(`Fetching ${category.replace(/-/g, ' ')} products...`);
+                showSubcategories(category);
+
+                try {
+                    const response = await fetch(`/api/products/category/${category}`);
+                    const data = await response.json();
+
+                    if (data.success) {
+                        showResults(
+                            `${category.replace(/-/g, ' ').toUpperCase()} Products`,
+                            `/api/products/category/${category}`,
+                            data
+                        );
+                    } else {
+                        showError(data.message || `Failed to fetch ${category} products`);
+                    }
+                } catch (error) {
+                    showError('Network error: ' + error.message);
+                }
+            }
+
+            async function fetchSubcategoryProducts(category, subcategory) {
+                showLoading(`Fetching ${subcategory} products from ${category.replace(/-/g, ' ')}...`);
+
+                try {
+                    const encodedSubcategory = encodeURIComponent(subcategory);
+                    const response = await fetch(`/api/products/subcategory/${category}/${encodedSubcategory}`);
+                    const data = await response.json();
+
+                    if (data.success) {
+                        showResults(
+                            `${subcategory} (${category.replace(/-/g, ' ')})`,
+                            `/api/products/subcategory/${category}/${encodedSubcategory}`,
+                            data
+                        );
+                    } else {
+                        showError(data.message || `No products found for ${subcategory} in ${category}`);
+                    }
+                } catch (error) {
+                    showError('Network error: ' + error.message);
+                }
+            }
+
+            // Auto-load categories summary on page load (only if authenticated)
+            window.addEventListener('DOMContentLoaded', function () {
+                if (sessionAuthToken) {
+                    setTimeout(fetchCategoriesSummary, 500);
+                }
+            });
+        </script>
+
+        <!-- Authentication Script (Stateless) -->
+        <script>
+            // Stateless authentication - no localStorage, credentials required each session
+            let sessionAuthToken = null;
+
+            // Handle authentication form submission
+            document.getElementById('authForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const username = document.getElementById('authUsername').value.trim();
+                const password = document.getElementById('authPassword').value;
+                const authError = document.getElementById('authError');
+                const authBtn = document.getElementById('authBtn');
+
+                if (!username || !password) {
+                    authError.textContent = 'Please enter both username and password';
+                    authError.style.display = 'block';
+                    return;
+                }
+
+                authBtn.disabled = true;
+                authBtn.textContent = 'Authenticating...';
+                authError.style.display = 'none';
+
+                try {
+                    const response = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        // Store token in memory only (stateless - no localStorage)
+                        sessionAuthToken = data.token;
+
+                        // Hide auth modal and show content
+                        document.getElementById('authOverlay').style.display = 'none';
+                        document.getElementById('pageContent').classList.add('authenticated');
+
+                        // Load initial data
+                        setTimeout(fetchCategoriesSummary, 500);
+                    } else {
+                        authError.textContent = data.message || 'Invalid credentials';
+                        authError.style.display = 'block';
+                        authBtn.disabled = false;
+                        authBtn.textContent = 'Authenticate';
+                    }
+                } catch (error) {
+                    console.error('Auth error:', error);
+                    authError.textContent = 'Network error. Please try again.';
+                    authError.style.display = 'block';
+                    authBtn.disabled = false;
+                    authBtn.textContent = 'Authenticate';
+                }
+            });
+
+            // Logout function - reload page to clear session
+            function logout() {
+                if (confirm('Logout? You will need to re-enter credentials.')) {
+                    // Clear session token
+                    sessionAuthToken = null;
+                    // Reload page to show auth modal again
+                    window.location.reload();
+                }
+            }
+
+            // Override all fetch functions to include auth header
+            const originalFetch = window.fetch;
+            window.fetch = function (...args) {
+                if (sessionAuthToken && args[0].startsWith('/api/')) {
+                    // Add auth header to API requests
+                    const options = args[1] || {};
+                    options.headers = options.headers || {};
+                    options.headers['Authorization'] = `Basic ${sessionAuthToken}`;
+                    args[1] = options;
+                }
+                return originalFetch.apply(this, args);
+            };
+        </script>
+    </div> <!-- Close page-content -->
 </body>
 
 </html>

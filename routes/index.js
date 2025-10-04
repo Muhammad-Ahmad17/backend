@@ -2,19 +2,24 @@ const express = require('express');
 const router = express.Router();
 
 // Import all route modules
+const authRoutes = require('./auth');
 const productsRoutes = require('./products');
 const categoriesRoutes = require('./categories');
 const summaryRoutes = require('./summary');
 const uploadsRoutes = require('./uploads');
 
-// Mount routes with their respective prefixes
-router.use('/products', productsRoutes);
+// Public routes (no authentication required)
+router.use('/', authRoutes);
 router.use('/', categoriesRoutes);
-router.use('/', summaryRoutes);
-router.use('/', uploadsRoutes);
 
-// Handle the specific products-json endpoint
-router.get('/products-json', async (req, res) => {
+// Protected routes (authentication required)
+const { requireAuth } = require('../middleware/auth');
+router.use('/products', requireAuth, productsRoutes);
+router.use('/', requireAuth, summaryRoutes);
+router.use('/', requireAuth, uploadsRoutes);
+
+// Handle the specific products-json endpoint (protected)
+router.get('/products-json', requireAuth, async (req, res) => {
     try {
         const Product = require('../models/Product');
         const products = await Product.find({}).sort({ createdAt: -1 });
