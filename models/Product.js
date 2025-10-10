@@ -18,8 +18,8 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Product category is required'],
         enum: {
-            values: ['sports-wear', 'gym-wear', 'fitness-wear', 'streetwear', 'fashion-wear', 'mma-arts', 'accessories'],
-            message: 'Category must be one of: sports-wear, gym-wear, fitness-wear, streetwear, fashion-wear, mma-arts, accessories'
+            values: ['sports-wear', 'gym-wear', 'safety-wear', 'streetwear', 'fashion-wear', 'mma-arts', 'accessories'],
+            message: 'Category must be one of: sports-wear, gym-wear, safety-wear, streetwear, fashion-wear, mma-arts, accessories'
         }
     },
     subcategory: {

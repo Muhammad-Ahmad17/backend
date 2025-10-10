@@ -1236,6 +1236,19 @@
             };
         }
 
+        // Get auth headers for FormData (without Content-Type)
+        function getAuthHeadersForFormData() {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                window.location.href = '/login';
+                return {};
+            }
+            // Don't set Content-Type for FormData - browser will set it with boundary
+            return {
+                'Authorization': `Basic ${token}`
+            };
+        }
+
         // Category and subcategory structure
         const SUBCATEGORIES = {
             'sports-wear': [
@@ -1625,15 +1638,22 @@
                 formData.append('colours', color);
             });
 
+            // Debug logging
+            console.log('📝 Form Data being sent:');
+            for (let [key, value] of formData.entries()) {
+                console.log(`  ${key}:`, value);
+            }
+
             // Show loading state
             submitBtn.disabled = true;
             btnText.textContent = 'Creating...';
             submitBtn.insertAdjacentHTML('afterbegin', '<div class="loading"></div>');
 
             try {
+                console.log('🚀 Sending request to /api/create-product...');
                 const response = await fetch('/api/create-product', {
                     method: 'POST',
-                    headers: getAuthHeaders(),
+                    headers: getAuthHeadersForFormData(), // Don't set Content-Type for FormData
                     body: formData
                 });
 
@@ -1644,7 +1664,19 @@
                     resetForm();
                     loadProducts();
                 } else {
-                    showMessage(messageDiv, '❌ ' + result.message, 'error');
+                    // Show detailed validation errors if available
+                    let errorMessage = result.message;
+                    if (result.errors && Array.isArray(result.errors)) {
+                        errorMessage += '<br><br><strong>Validation Errors:</strong><ul>';
+                        result.errors.forEach(err => {
+                            errorMessage += `<li><strong>${err.field}:</strong> ${err.message}</li>`;
+                        });
+                        errorMessage += '</ul>';
+                    }
+                    showMessage(messageDiv, '❌ ' + errorMessage, 'error');
+                    
+                    // Log detailed error for debugging
+                    console.error('Product creation failed:', result);
                 }
             } catch (error) {
                 console.error('Error:', error);

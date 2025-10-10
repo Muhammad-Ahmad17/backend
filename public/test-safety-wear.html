@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safety-Wear Product Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .message {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .debug {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>🦺 Safety-Wear Product Creation Test</h1>
+    <p>Test adding products to safety-wear category with detailed debugging</p>
+
+    <div id="message"></div>
+    <div id="debug" class="debug" style="display:none;"></div>
+
+    <form id="testForm">
+        <div class="form-group">
+            <label>Product ID *</label>
+            <input type="text" name="id" value="safety-test-001" required>
+        </div>
+
+        <div class="form-group">
+            <label>Product Name *</label>
+            <input type="text" name="name" value="High Visibility Safety Jacket" required>
+        </div>
+
+        <div class="form-group">
+            <label>Category *</label>
+            <select name="category" required>
+                <option value="safety-wear" selected>Safety Wear</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Subcategory *</label>
+            <select name="subcategory" required>
+                <option value="">Select Subcategory</option>
+                <option value="Safety Jackets">Safety Jackets</option>
+                <option value="Safety Trousers">Safety Trousers</option>
+                <option value="Safety Shirts">Safety Shirts</option>
+                <option value="High-Visibility Clothing">High-Visibility Clothing</option>
+                <option value="Anti-Static Clothing">Anti-Static Clothing</option>
+                <option value="Flame-Retardant Clothing">Flame-Retardant Clothing</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Description *</label>
+            <textarea name="description" rows="4" required>High visibility safety jacket with reflective strips for construction workers and road safety personnel. Meets EN ISO 20471 standards.</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Colors (comma-separated) *</label>
+            <input type="text" id="colorsInput" value="Orange, Yellow" required>
+            <small>Will be split into array</small>
+        </div>
+
+        <div class="form-group">
+            <label>Printing Method *</label>
+            <input type="text" name="printingMethod" value="Reflective Strip" required>
+        </div>
+
+        <div class="form-group">
+            <label>Sizes *</label>
+            <div>
+                <label><input type="checkbox" name="sizes" value="S"> S</label>
+                <label><input type="checkbox" name="sizes" value="M" checked> M</label>
+                <label><input type="checkbox" name="sizes" value="L" checked> L</label>
+                <label><input type="checkbox" name="sizes" value="XL" checked> XL</label>
+                <label><input type="checkbox" name="sizes" value="XXL"> XXL</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Minimum Quantity *</label>
+            <input type="number" name="minimumQuantity" value="50" min="1" max="1000" required>
+        </div>
+
+        <div class="form-group">
+            <label>Featured</label>
+            <select name="featured">
+                <option value="false">No</option>
+                <option value="true">Yes</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Tags (comma-separated)</label>
+            <input type="text" name="tags" value="safety, visibility, construction, reflective">
+        </div>
+
+        <div class="form-group">
+            <label>Images (optional)</label>
+            <input type="file" name="images" multiple accept="image/*">
+            <small>Up to 5 images, max 5MB each</small>
+        </div>
+
+        <button type="submit">🚀 Create Product</button>
+    </form>
+
+    <script>
+        const form = document.getElementById('testForm');
+        const messageDiv = document.getElementById('message');
+        const debugDiv = document.getElementById('debug');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            messageDiv.innerHTML = '';
+            debugDiv.style.display = 'block';
+            debugDiv.textContent = 'Preparing request...';
+
+            // Get auth token
+            const authToken = localStorage.getItem('authToken');
+            if (!authToken) {
+                messageDiv.innerHTML = '<div class="error">❌ Not authenticated. Please login first at <a href="/login">/login</a></div>';
+                return;
+            }
+
+            // Create FormData
+            const formData = new FormData(form);
+            
+            // Handle colors - convert comma-separated string to multiple form entries
+            const colorsInput = document.getElementById('colorsInput').value;
+            const colors = colorsInput.split(',').map(c => c.trim()).filter(c => c);
+            formData.delete('colours');
+            colors.forEach(color => {
+                formData.append('colours', color);
+            });
+
+            // Debug: Show what's being sent
+            let debugInfo = '📝 Form Data Being Sent:\n' + '='.repeat(50) + '\n';
+            for (let [key, value] of formData.entries()) {
+                if (value instanceof File) {
+                    debugInfo += `${key}: [FILE] ${value.name} (${value.size} bytes)\n`;
+                } else {
+                    debugInfo += `${key}: ${value}\n`;
+                }
+            }
+            debugDiv.textContent = debugInfo;
+
+            try {
+                debugDiv.textContent += '\n🚀 Sending request to /api/create-product...\n';
+                
+                const response = await fetch('/api/create-product', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Basic ${authToken}`
+                        // Don't set Content-Type - let browser set it with boundary
+                    },
+                    body: formData
+                });
+
+                debugDiv.textContent += `📡 Response Status: ${response.status} ${response.statusText}\n`;
+
+                const result = await response.json();
+                
+                debugDiv.textContent += '\n📦 Response Data:\n' + JSON.stringify(result, null, 2);
+
+                if (result.success) {
+                    messageDiv.innerHTML = `<div class="success">✅ ${result.message}</div>`;
+                    form.reset();
+                } else {
+                    let errorHtml = `<div class="error">❌ ${result.message}`;
+                    
+                    if (result.errors && Array.isArray(result.errors)) {
+                        errorHtml += '<br><br><strong>Validation Errors:</strong><ul>';
+                        result.errors.forEach(err => {
+                            errorHtml += `<li><strong>${err.field}:</strong> ${err.message}</li>`;
+                        });
+                        errorHtml += '</ul>';
+                    }
+                    
+                    errorHtml += '</div>';
+                    messageDiv.innerHTML = errorHtml;
+                }
+            } catch (error) {
+                messageDiv.innerHTML = `<div class="error">❌ Network Error: ${error.message}</div>`;
+                debugDiv.textContent += `\n\n💥 Error: ${error.message}\n${error.stack}`;
+            }
+        });
+
+        // Check auth status on load
+        window.addEventListener('load', () => {
+            const authToken = localStorage.getItem('authToken');
+            if (!authToken) {
+                messageDiv.innerHTML = '<div class="error">⚠️ Not authenticated. Please <a href="/login">login</a> first.</div>';
+            } else {
+                messageDiv.innerHTML = '<div class="success">✅ Authenticated. Ready to test!</div>';
+            }
+        });
+    </script>
+</body>
+</html>
