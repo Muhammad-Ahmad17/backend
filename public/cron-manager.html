@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cron Service Manager - Backend</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .status-enabled {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-disabled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .helper-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .examples {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .example-item {
+            padding: 8px;
+            margin: 5px 0;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
+
+        .example-item:hover {
+            background: #e9ecef;
+        }
+
+        .example-schedule {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .log-container {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+
+        .log-success {
+            color: #4ec9b0;
+        }
+
+        .log-error {
+            color: #f48771;
+        }
+
+        .log-info {
+            color: #9cdcfe;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .loading {
+            animation: pulse 1.5s infinite;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⏱️ Cron Service Manager</h1>
+            <p class="subtitle">Schedule automated tasks to run at specified intervals</p>
+        </div>
+
+        <div id="alert" class="alert"></div>
+
+        <!-- Status Card -->
+        <div class="card">
+            <h2>
+                Current Status
+                <span id="statusBadge" class="status-badge status-disabled">Disabled</span>
+            </h2>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">Total Runs</div>
+                    <div class="stat-value" id="totalRuns">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Success Rate</div>
+                    <div class="stat-value" id="successRate">0%</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Last Run</div>
+                    <div class="stat-value" id="lastRun" style="font-size: 14px;">Never</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Status</div>
+                    <div class="stat-value" id="lastStatus" style="font-size: 16px;">-</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button class="btn btn-secondary" onclick="refreshStatus()">🔄 Refresh Status</button>
+                <button class="btn btn-danger" onclick="stopCron()" id="stopBtn" disabled>⏹️ Stop Cron</button>
+            </div>
+        </div>
+
+        <!-- Configuration Card -->
+        <div class="card">
+            <h2>Configure & Start Cron Job</h2>
+
+            <div class="form-group">
+                <label>Cron Schedule</label>
+                <select id="schedulePreset" onchange="updateScheduleInput()">
+                    <option value="">-- Select a preset or enter custom --</option>
+                    <option value="*/1 * * * *">Every 1 minute (Testing)</option>
+                    <option value="*/5 * * * *">Every 5 minutes</option>
+                    <option value="*/10 * * * *">Every 10 minutes (Recommended)</option>
+                    <option value="*/15 * * * *">Every 15 minutes</option>
+                    <option value="*/30 * * * *">Every 30 minutes</option>
+                    <option value="0 * * * *">Every hour</option>
+                    <option value="0 */2 * * *">Every 2 hours</option>
+                    <option value="0 */6 * * *">Every 6 hours</option>
+                    <option value="0 0 * * *">Daily at midnight</option>
+                    <option value="0 9 * * 1-5">Weekdays at 9 AM</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Or Enter Custom Schedule</label>
+                <input type="text" id="schedule" placeholder="*/10 * * * *" value="*/10 * * * *">
+                <div class="helper-text">Format: minute hour day month weekday (e.g., */10 * * * * = every 10 minutes)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Target URL</label>
+                <input type="text" id="url" placeholder="http://localhost:5000/keep-alive/status"
+                    value="http://localhost:5000/keep-alive/status">
+                <div class="helper-text">The URL that will be called on each cron execution</div>
+            </div>
+
+            <div class="form-group">
+                <label>HTTP Method</label>
+                <select id="method">
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Timeout (ms)</label>
+                <input type="number" id="timeout" value="30000" min="1000" step="1000">
+                <div class="helper-text">Request timeout in milliseconds (default: 30000ms = 30 seconds)</div>
+            </div>
+
+            <button class="btn btn-success" onclick="startCron()">▶️ Start Cron Service</button>
+            <button class="btn btn-primary" onclick="updateSchedule()">🔄 Update Schedule</button>
+            <button class="btn btn-primary" onclick="updateUrl()">🌐 Update URL</button>
+
+            <div class="examples">
+                <strong>💡 Quick Examples:</strong>
+                <div class="example-item"
+                    onclick="setExample('*/5 * * * *', 'http://localhost:5000/keep-alive/status')">
+                    <span class="example-schedule">*/5 * * * *</span> - Keep server alive (every 5 min)
+                </div>
+                <div class="example-item" onclick="setExample('*/10 * * * *', 'https://your-app.herokuapp.com/')">
+                    <span class="example-schedule">*/10 * * * *</span> - Wake Heroku app (every 10 min)
+                </div>
+                <div class="example-item" onclick="setExample('0 * * * *', 'http://localhost:5000/api/health')">
+                    <span class="example-schedule">0 * * * *</span> - Hourly health check
+                </div>
+                <div class="example-item" onclick="setExample('0 0 * * *', 'http://localhost:5000/api/backup')">
+                    <span class="example-schedule">0 0 * * *</span> - Daily backup at midnight
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Configuration Card -->
+        <div class="card">
+            <h2>📋 Current Configuration</h2>
+            <div class="log-container" id="configLog">
+                Loading...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let autoRefreshInterval = null;
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            refreshStatus();
+            // Auto-refresh every 10 seconds
+            autoRefreshInterval = setInterval(refreshStatus, 10000);
+        });
+
+        function showAlert(message, type = 'success') {
+            const alert = document.getElementById('alert');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alert.style.display = 'block';
+
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+
+        async function refreshStatus() {
+            try {
+                const response = await fetch('/cron/status');
+                const data = await response.json();
+
+                if (data.success) {
+                    const stats = data.stats;
+
+                    // Update status badge
+                    const statusBadge = document.getElementById('statusBadge');
+                    if (stats.enabled) {
+                        statusBadge.textContent = 'Running';
+                        statusBadge.className = 'status-badge status-enabled';
+                        document.getElementById('stopBtn').disabled = false;
+                    } else {
+                        statusBadge.textContent = 'Disabled';
+                        statusBadge.className = 'status-badge status-disabled';
+                        document.getElementById('stopBtn').disabled = true;
+                    }
+
+                    // Update stats
+                    document.getElementById('totalRuns').textContent = stats.totalRuns;
+                    document.getElementById('successRate').textContent = stats.successRate;
+                    document.getElementById('lastRun').textContent = stats.lastRunTime ?
+                        new Date(stats.lastRunTime).toLocaleString() : 'Never';
+                    document.getElementById('lastStatus').textContent = stats.lastRunStatus || '-';
+
+                    // Update configuration log
+                    const configLog = document.getElementById('configLog');
+                    configLog.innerHTML = `
+                        <div class="log-entry log-info">Enabled: ${stats.enabled ? 'Yes ✅' : 'No ❌'}</div>
+                        <div class="log-entry log-info">Schedule: ${stats.schedule || 'Not set'}</div>
+                        <div class="log-entry log-info">Target URL: ${stats.url || 'Not set'}</div>
+                        <div class="log-entry log-info">Method: ${stats.method}</div>
+                        <div class="log-entry log-info">Started At: ${stats.startedAt ? new Date(stats.startedAt).toLocaleString() : 'Not started'}</div>
+                        <div class="log-entry ${stats.lastRunStatus === 'success' ? 'log-success' : 'log-error'}">
+                            Last Run: ${stats.lastRunStatus ? stats.lastRunStatus.toUpperCase() : 'N/A'}
+                            ${stats.lastRunDuration ? `(${stats.lastRunDuration}ms)` : ''}
+                        </div>
+                        <div class="log-entry log-info">Success: ${stats.successCount} | Failed: ${stats.failureCount} | Total: ${stats.totalRuns}</div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error refreshing status:', error);
+            }
+        }
+
+        async function startCron() {
+            const schedule = document.getElementById('schedule').value;
+            const url = document.getElementById('url').value;
+            const method = document.getElementById('method').value;
+            const timeout = parseInt(document.getElementById('timeout').value);
+
+            if (!schedule) {
+                showAlert('Please enter a cron schedule', 'error');
+                return;
+            }
+
+            if (!url) {
+                showAlert('Please enter a target URL', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/cron/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ schedule, url, method, timeout })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('✅ Cron service started successfully!', 'success');
+                    refreshStatus();
+                } else {
+                    showAlert('❌ ' + data.message, 'error');
+                }
+            } catch (error) {
+                showAlert('❌ Error starting cron: ' + error.message, 'error');
+            }
+        }
+
+        async function stopCron() {
+            try {
+                const response = await fetch('/cron/stop', { method: 'POST' });
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('⏹️ Cron service stopped', 'info');
+                    refreshStatus();
+                } else {
+                    showAlert('❌ ' + data.message, 'error');
+                }
+            } catch (error) {
+                showAlert('❌ Error stopping cron: ' + error.message, 'error');
+            }
+        }
+
+        async function updateSchedule() {
+            const schedule = document.getElementById('schedule').value;
+
+            if (!schedule) {
+                showAlert('Please enter a cron schedule', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/cron/update-schedule', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ schedule })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('✅ Schedule updated successfully!', 'success');
+                    refreshStatus();
+                } else {
+                    showAlert('❌ ' + data.message, 'error');
+                }
+            } catch (error) {
+                showAlert('❌ Error updating schedule: ' + error.message, 'error');
+            }
+        }
+
+        async function updateUrl() {
+            const url = document.getElementById('url').value;
+
+            if (!url) {
+                showAlert('Please enter a target URL', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/cron/update-url', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('✅ URL updated successfully!', 'success');
+                    refreshStatus();
+                } else {
+                    showAlert('❌ ' + data.message, 'error');
+                }
+            } catch (error) {
+                showAlert('❌ Error updating URL: ' + error.message, 'error');
+            }
+        }
+
+        function updateScheduleInput() {
+            const preset = document.getElementById('schedulePreset').value;
+            if (preset) {
+                document.getElementById('schedule').value = preset;
+            }
+        }
+
+        function setExample(schedule, url) {
+            document.getElementById('schedule').value = schedule;
+            document.getElementById('url').value = url;
+            document.getElementById('schedulePreset').value = schedule;
+            showAlert('Example loaded! Click "Start Cron Service" to begin.', 'info');
+        }
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+        });
+    </script>
+</body>
+
+</html>
