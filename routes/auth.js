@@ -22,9 +22,9 @@ router.post('/validate-session', (req, res) => {
 
         const crypto = require('crypto');
         const passwordHash = crypto.createHash('sha256').update(password).digest('hex');
-        const expectedHash = crypto.createHash('sha256').update('Dive9852&aPRISMATIC').digest('hex');
+        const expectedHash = crypto.createHash('sha256').update(process.env.ADMIN_PASSWORD || 'defaultPassword').digest('hex');
 
-        if (username === 'prismaticsport' && passwordHash === expectedHash) {
+        if (username === (process.env.ADMIN_USERNAME || 'prismaticsport') && passwordHash === expectedHash) {
             return res.json({
                 success: true,
                 message: 'Session valid'

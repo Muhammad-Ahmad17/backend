@@ -7,9 +7,9 @@ const crypto = require('crypto');
 
 // Securely stored credentials (hashed for basic security)
 const CREDENTIALS = {
-    username: 'prismaticsport',
-    // Password: Dive9852&aPRISMATIC (stored as hash)
-    passwordHash: crypto.createHash('sha256').update('Dive9852&aPRISMATIC').digest('hex')
+    username: process.env.ADMIN_USERNAME || 'prismaticsport',
+    // Password loaded from environment variable (stored as hash)
+    passwordHash: crypto.createHash('sha256').update(process.env.ADMIN_PASSWORD || 'defaultPassword').digest('hex')
 };
 
 /**
