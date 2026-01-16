@@ -19,9 +19,6 @@ router.use('/', summaryRoutes); // Summary routes are now public (read-only data
 // Products routes - Mixed (GET public, POST/PUT/DELETE protected)
 router.use('/products', productsRoutes);
 
-// Protected routes (authentication required - only write operations)
-router.use('/', requireAuth, uploadsRoutes);
-
 // Handle the specific products-json endpoint (public for GET)
 router.get('/products-json', async (req, res) => {
     try {
@@ -57,5 +54,8 @@ router.get('/products-json', async (req, res) => {
         });
     }
 });
+
+// Protected routes (authentication required - only write operations)
+router.use('/', requireAuth, uploadsRoutes);
 
 module.exports = router;
